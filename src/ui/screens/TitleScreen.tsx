@@ -96,7 +96,7 @@ export function TitleScreen({ onStart, onGallery }: { onStart: (c: MatchConfig) 
       </section>
 
       <footer className="cover__foot">
-        웹 프로토타입 v0.2 · 다섯 신도 모두 플레이 가능 (욕망·무위 카드는 임시 설계) · 아트는 플레이스홀더 · 정모의 공식 명칭은 아직 미정
+        웹 프로토타입 v0.3 · 다섯 신도 모두 플레이 가능 (욕망·무위 카드는 임시 설계) · 아트는 플레이스홀더 · 정모의 공식 명칭은 아직 미정
       </footer>
       {rules && <RulesModal onClose={() => setRules(false)} />}
     </div>

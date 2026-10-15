@@ -19,7 +19,9 @@ import {
   whyCantMove,
   whyCantPlay,
   whyCantPower,
+  whyCantTribute,
 } from '../../engine/rules';
+import { BALANCE } from '../../engine/db';
 import type { GameAction, GameState, Seat, TargetRef, Unit, Zone } from '../../engine/types';
 import { CardFace } from '../components/CardFace';
 import { DescentTrack } from '../components/DescentTrack';
@@ -39,7 +41,7 @@ export interface MatchConfig {
   seed?: number;
 }
 
-type Sel = { kind: 'none' } | { kind: 'card'; handIndex: number } | { kind: 'power' } | { kind: 'raid'; uid: number };
+type Sel = { kind: 'none' } | { kind: 'card'; handIndex: number } | { kind: 'power' } | { kind: 'raid'; uid: number } | { kind: 'tribute' };
 
 const SPEEDS = [
   { label: '느리게', mul: 0.6 },
@@ -140,6 +142,7 @@ export function MatchScreen({ config, onExit }: { config: MatchConfig; onExit: (
   const onHandClick = (handIndex: number) => {
     if (!humanTurn || human === null) return;
     if (s.pending?.seat === human) return act({ type: 'chooseDiscard', handIndex });
+    if (sel.kind === 'tribute') return act({ type: 'tribute', handIndex });
     if (sel.kind === 'card' && targets.hand.has(handIndex)) {
       return act({ type: 'playCard', handIndex: sel.handIndex, target: { kind: 'hand', index: handIndex } });
     }
@@ -256,6 +259,7 @@ export function MatchScreen({ config, onExit }: { config: MatchConfig; onExit: (
     if (s.phase === 'over') return '대전 종료';
     if (human !== null && s.pending?.seat === human) return `버릴 카드를 ${s.pending.count}장 고른다`;
     if (!humanTurn) return `${god(s.players[s.active]).character} 생각 중…`;
+    if (sel.kind === 'tribute') return `헌납 — 바칠 카드를 고른다. 이번 턴 신앙심 +${BALANCE.tributeFaith} (턴당 ${BALANCE.tributePerTurn}회, Esc 취소)`;
     if (sel.kind === 'card') return `《${card(s.players[human!].hand[sel.handIndex]).name}》 — 대상을 고른다 (Esc 취소)`;
     if (targets.ward.size) return '병실 무덤에서 되살릴 신도를 고른다 (Esc 취소)';
     if (sel.kind === 'power') return `권능 — 대상을 고른다 (Esc 취소)`;
@@ -326,6 +330,17 @@ export function MatchScreen({ config, onExit }: { config: MatchConfig; onExit: (
             </div>
             <div className="phasebar__prompt">{prompt}</div>
             <div className="phasebar__actions">
+              {humanTurn && s.phase === 'prep' && me && (
+                <button
+                  type="button"
+                  className={`btn btn--tribute${sel.kind === 'tribute' ? ' is-on' : ''}`}
+                  onClick={() => setSel(sel.kind === 'tribute' ? { kind: 'none' } : { kind: 'tribute' })}
+                  disabled={!!whyCantTribute(s) && sel.kind !== 'tribute'}
+                  title={whyCantTribute(s) ?? `손패 1장을 바쳐 이번 턴 신앙심 +${BALANCE.tributeFaith}`}
+                >
+                  {me.tributed ? '🔥 헌납 완료' : sel.kind === 'tribute' ? '헌납 취소' : `🔥 헌납 +${BALANCE.tributeFaith}`}
+                </button>
+              )}
               {humanTurn && s.phase === 'prep' && (
                 <button type="button" className="btn" onClick={() => act({ type: 'toAction' })} disabled={!!s.pending}>
                   행동 페이즈 →
@@ -342,10 +357,10 @@ export function MatchScreen({ config, onExit }: { config: MatchConfig; onExit: (
           {renderHalf(bottom, false)}
 
           {me && (
-            <div className={`hand${s.pending?.seat === human ? ' is-discarding' : ''}`}>
+            <div className={`hand${s.pending?.seat === human ? ' is-discarding' : ''}${sel.kind === 'tribute' ? ' is-tributing' : ''}`}>
               {me.hand.map((id, i) => {
                 const why = humanTurn ? whyCantPlay(s, i) : '상대 차례';
-                const pickable = s.pending?.seat === human || targets.hand.has(i);
+                const pickable = s.pending?.seat === human || sel.kind === 'tribute' || targets.hand.has(i);
                 return (
                   <CardFace
                     key={`${id}-${i}`}

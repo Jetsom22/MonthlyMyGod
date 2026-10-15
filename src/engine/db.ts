@@ -33,10 +33,14 @@ export const BALANCE = {
   startHand: 4,
   handLimit: 8,
   secondPlayerFaithBonus: 1,
+  secondPlayerExtraCards: 1, // 후공 보정 — 시작 손패 +1장 (선공 승률 편차 완화)
+  secondPlayerStartOp: 0, // 후공 보정 — 시작 OP
   deckOutPenalty: 1,
   daySlots: 3,
   sanctSlots: 2,
   shrineMax: 2,
+  tributePerTurn: 1, // 헌납 — 턴당 횟수
+  tributeFaith: 1, // 헌납 — 얻는 신앙심
   turnLimit: 80, // 안전장치 — 양쪽 합산 턴
 };
 

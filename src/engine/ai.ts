@@ -17,12 +17,15 @@ import {
   raidTargets,
   RELIC_IDS,
   remainingLife,
+  sanctSlots,
   sumPassive,
   wardCount,
   whyCantMove,
   whyCantPlay,
   whyCantPower,
+  whyCantTribute,
 } from './rules';
+import { BALANCE } from './db';
 import type { GameAction, GameState, PlayerState, Seat, Unit } from './types';
 
 const W = {
@@ -40,7 +43,8 @@ const W = {
   ghostManifest: 1.4, // 인내 현현: 유령 1 = 매 턴 OP 1
   hand: 0.45,
   threat: 0.7,
-  relic: 2.2, // 영원: 병실에 안치된 유품 하나
+  relic: 2.6, // 영원: 병실에 안치된 유품 하나
+  momentInHand: 1.4, // 영원: 손에 쥔 《영원의 순간》 (승리 수단을 바치지 않게)
   relicsAll: 3.5, // 영원: 삼종 완성
   ward: 0.08, // 영원: 병실 1장
   dependent: 1.2, // 욕망: 의존 대상이 있다
@@ -66,10 +70,10 @@ function unitValue(s: GameState, u: Unit, p: PlayerState): number {
     if (god(p).deck === 'WCH') v += off * W.witchSacPotential;
   }
   const relic = god(p).deck === 'ETN' && !!c.tags?.includes('유품');
-  if (u.zone === 'day' && off === 0 && !c.ghost && !relic) v -= W.idleDaySlot;
+  if (u.zone === 'day' && off === 0 && !c.ghost) v -= W.idleDaySlot; // 유품도 일상에선 자리만 막는다 → 성역 벽으로
   if (c.ghost && god(p).deck === 'PAT' && p.stage >= 2) v += W.ghostManifest;
   // 영원: 판 위의 유품은 "안치되는 중" — 병실에 들어갈 때 가치의 절반 (같은 유품이 이미 안치됐으면 0)
-  if (relic && !p.graveyard.includes(u.cardId)) v += W.relic * 0.5;
+  if (relic && !p.graveyard.includes(u.cardId)) v += W.relic * 0.3;
   return v;
 }
 
@@ -91,6 +95,7 @@ function sideScore(s: GameState, p: PlayerState): number {
   if (g.deck === 'ETN') {
     const enshrined = RELIC_IDS.filter((id) => p.graveyard.includes(id)).length;
     v += enshrined * W.relic + (enshrined === RELIC_IDS.length ? W.relicsAll : 0) + wardCount(p) * W.ward;
+    v += Math.min(2, p.hand.filter((id) => id === 'ETN-R-001').length) * W.momentInHand;
   }
   // 욕망 — 의존 대상
   const d = dependentUnit(s, p);
@@ -101,10 +106,16 @@ function sideScore(s: GameState, p: PlayerState): number {
   return v;
 }
 
-/** 내 성역이 비었을 때 상대 성역 습격수가 다음 턴에 찌를 위협 */
+/** 다음 상대 턴에 내 일상·트랙을 찌를 위협.
+ *  상대 성역 신도뿐 아니라 일상 신도도 다음 턴에 성역으로 걸어 들어와 바로 습격할 수 있다.
+ *  내 성역 벽 하나가 습격수 하나를 붙잡는다고 본다 (도발). */
 function threat(s: GameState, me: PlayerState, opp: PlayerState): number {
-  if (me.sanct.length > 0) return 0;
-  return opp.sanct.reduce((a, u) => a + effRaid(s, u), 0) * W.threat;
+  const raiders = [...opp.sanct, ...opp.day]
+    .map((u) => effRaid(s, u))
+    .filter((r) => r > 0)
+    .sort((a, b) => b - a)
+    .slice(0, sanctSlots(opp));
+  return raiders.slice(me.sanct.length).reduce((a, r) => a + r, 0) * W.threat;
 }
 
 export function evaluate(s: GameState, seat: Seat): number {
@@ -158,10 +169,29 @@ export function aiChooseAction(s: GameState): GameAction {
   if (s.phase === 'prep') {
     let best: GameAction | null = null;
     let bestScore = base + 0.05;
-    for (const a of prepCandidates(s)) {
+    const candidates = prepCandidates(s);
+    // 헌납: 신앙심 1이 모자라 못 내는 카드가 있을 때만, 바친 뒤 그 카드를 내는 두 수로 본다
+    const p0 = s.players[seat];
+    if (!whyCantTribute(s)) {
+      const seen = new Set<string>();
+      p0.hand.forEach((id, handIndex) => {
+        if (seen.has(id)) return;
+        seen.add(id);
+        candidates.push({ type: 'tribute', handIndex });
+      });
+    }
+    for (const a of candidates) {
       const r = applyAction(s, a);
       if (r.error) continue;
       let score = evaluate(r.state, seat);
+      if (a.type === 'tribute' && p0.hand.some((id) => effectiveCost(s, seat, id) === p0.faith + BALANCE.tributeFaith)) {
+        // 바친 1이 모자랐던 카드를 열어 주는지 한 수 더 본다 (바친 것 자체의 가치 — 예: 유품 안치 — 도 그대로 남는다)
+        for (const f of prepCandidates(r.state)) {
+          if (f.type !== 'playCard') continue;
+          const r2 = applyAction(r.state, f);
+          if (!r2.error) score = Math.max(score, evaluate(r2.state, seat) - 0.02);
+        }
+      }
       // 이동은 한 수 더 내다본다 (성역으로 옮겨 권능 희생 등)
       if (a.type === 'move') {
         for (const f of powerFollowUps(r.state)) {

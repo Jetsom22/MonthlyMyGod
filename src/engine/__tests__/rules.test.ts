@@ -172,3 +172,26 @@ describe('강림 트랙', () => {
     expect(s.phase).toBe('over');
   });
 });
+
+describe('헌납 · 후공 보정', () => {
+  it('헌납 — 손패 1장을 바쳐 이번 턴 신앙심 +1, 턴당 1회', () => {
+    let s = blank();
+    s.players[0].faith = 2;
+    s.players[0].hand = ['PAT-U-008', 'PAT-U-001'];
+    s = ok(s, { type: 'tribute', handIndex: 0 });
+    expect(s.players[0].faith).toBe(3);
+    expect(s.players[0].hand).toEqual(['PAT-U-001']);
+    expect(s.players[0].graveyard).toContain('PAT-U-008');
+    expect(applyAction(s, { type: 'tribute', handIndex: 0 }).error).toContain('이미');
+    s = ok(s, { type: 'endTurn' });
+    s = ok(s, { type: 'endTurn' });
+    expect(s.players[0].tributed).toBe(false);
+  });
+
+  it('후공은 시작 손패가 1장 더 많다', () => {
+    const s = createMatch({ gods: [PAT, WCH], ai: [false, false], seed: 11, first: 0 });
+    // 선공은 첫 턴 드로우로 4+1, 후공은 4+1 (아직 자기 턴 전)
+    expect(s.players[0].hand.length).toBe(5);
+    expect(s.players[1].hand.length).toBe(5);
+  });
+});

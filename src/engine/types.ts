@@ -44,8 +44,10 @@ export type ActionVerb =
   // 영원 — 병실 무덤
   | 'revive' // 병실에서 신도를 되살림 (params.intact: 온전히 / 아니면 목숨 1로 일그러진 채)
   | 'ward_fill' // 병실에 N장 더 쌓음
+  | 'mill' // 덱 맨 위 N장을 묘지(병실)로
   | 'block_offering_op' // (지속) 봉헌 정산이 OP가 되지 않는다 — 영원의 제단
   | 'free_card' // (지속) 특정 카드를 신앙심 없이 — 영원의 제단
+  | 'recur_card' // (지속) 특정 의식을 쓰면 묘지 대신 손패로 돌아온다 — 영원의 제단
   // 욕망 — 의존 대상
   | 'designate' // 의존 대상 지정
   | 'copy_stats' // 고른 신도가 의존 대상의 봉헌력·습격력을 똑같이 가짐
@@ -226,6 +228,8 @@ export interface PlayerState {
   locked: boolean;
   /** 턴당 1회 효과가 이번 턴에 이미 터졌는지 */
   onceFlags: string[];
+  /** 이번 턴 헌납(손패를 바쳐 신앙심 +1)을 했는지 */
+  tributed: boolean;
 }
 
 export type Phase = 'prep' | 'action' | 'over';
@@ -288,6 +292,7 @@ export type GameAction =
   | { type: 'toAction' }
   | { type: 'raid'; uid: number; target: RaidTarget }
   | { type: 'endTurn' }
-  | { type: 'chooseDiscard'; handIndex: number };
+  | { type: 'chooseDiscard'; handIndex: number }
+  | { type: 'tribute'; handIndex: number }; // 헌납 — 손패 1장을 바쳐 이번 턴 신앙심 +1 (턴당 1회)
 
 export const STAGE_NAMES = ['잠복', '조짐', '현현', '승천'] as const;

@@ -1,176 +1,602 @@
 [
   {
-    "id": "DSR-U-001", "name": "팔로워 1호", "type": "U", "deck": "DSR", "cost": 1, "draft": true,
-    "life": 2, "offering": 1, "raid": 1, "role": "저가",
+    "id": "DSR-U-001",
+    "name": "팔로워 1호",
+    "type": "U",
+    "deck": "DSR",
+    "cost": 1,
+    "draft": true,
+    "life": 2,
+    "offering": 1,
+    "raid": 1,
+    "role": "저가",
     "text": "",
     "flavor": "하트 눌렀어요! 맞팔 해주세요!"
   },
   {
-    "id": "DSR-U-002", "name": "최애 후보", "type": "U", "deck": "DSR", "cost": 2, "draft": true,
-    "life": 2, "offering": 1, "raid": 1, "role": "최애 후보",
+    "id": "DSR-U-002",
+    "name": "최애 후보",
+    "type": "U",
+    "deck": "DSR",
+    "cost": 2,
+    "draft": true,
+    "life": 2,
+    "offering": 1,
+    "raid": 1,
+    "role": "최애 후보",
     "text": "이 신도가 의존 대상인 동안 봉헌력 +1, 습격력 +1.",
     "flavor": "오늘부터 1일이야. …맞지?",
     "effects": [
-      { "when": "passive", "what": "offering_buff", "who": "source_unit", "params": { "amount": 1 }, "cond": { "is_dependent": true } },
-      { "when": "passive", "what": "raid_buff", "who": "source_unit", "params": { "amount": 1 }, "cond": { "is_dependent": true } }
+      {
+        "when": "passive",
+        "what": "offering_buff",
+        "who": "source_unit",
+        "params": {
+          "amount": 1
+        },
+        "cond": {
+          "is_dependent": true
+        }
+      },
+      {
+        "when": "passive",
+        "what": "raid_buff",
+        "who": "source_unit",
+        "params": {
+          "amount": 1
+        },
+        "cond": {
+          "is_dependent": true
+        }
+      }
     ]
   },
   {
-    "id": "DSR-U-003", "name": "하트 남발러", "type": "U", "deck": "DSR", "cost": 1, "draft": true,
-    "life": 1, "offering": 1, "raid": 1, "role": "저가",
+    "id": "DSR-U-003",
+    "name": "하트 남발러",
+    "type": "U",
+    "deck": "DSR",
+    "cost": 1,
+    "draft": true,
+    "life": 1,
+    "offering": 1,
+    "raid": 1,
+    "role": "저가",
     "text": "사망 시: 카드 1장.",
     "flavor": "누르는 건 공짜니까.",
-    "effects": [{ "when": { "trigger": "on_death" }, "what": "draw", "who": "self_owner", "params": { "count": 1 } }]
+    "effects": [
+      {
+        "when": {
+          "trigger": "on_death"
+        },
+        "what": "draw",
+        "who": "self_owner",
+        "params": {
+          "count": 1
+        }
+      }
+    ]
   },
   {
-    "id": "DSR-U-004", "name": "답장 기다리는 아이", "type": "U", "deck": "DSR", "cost": 2, "draft": true,
-    "life": 2, "offering": 1, "raid": 1, "role": "얼굴 연동",
+    "id": "DSR-U-004",
+    "name": "답장 기다리는 아이",
+    "type": "U",
+    "deck": "DSR",
+    "cost": 2,
+    "draft": true,
+    "life": 2,
+    "offering": 1,
+    "raid": 1,
+    "role": "얼굴 연동",
     "text": "「울먹」인 동안 습격력 +2.",
     "flavor": "1이 안 없어진다.",
-    "effects": [{ "when": "passive", "what": "raid_buff", "who": "source_unit", "params": { "amount": 2 }, "cond": { "mood": "울먹" } }]
+    "effects": [
+      {
+        "when": "passive",
+        "what": "raid_buff",
+        "who": "source_unit",
+        "params": {
+          "amount": 2
+        },
+        "cond": {
+          "mood": "울먹"
+        }
+      }
+    ]
   },
   {
-    "id": "DSR-U-005", "name": "이모티콘 장인", "type": "U", "deck": "DSR", "cost": 3, "draft": true,
-    "life": 3, "offering": 1, "raid": 1, "role": "얼굴 연동",
+    "id": "DSR-U-005",
+    "name": "이모티콘 장인",
+    "type": "U",
+    "deck": "DSR",
+    "cost": 3,
+    "draft": true,
+    "life": 3,
+    "offering": 1,
+    "raid": 1,
+    "role": "얼굴 연동",
     "text": "「방긋」 봉헌력 +1 · 「울먹」 습격력 +2 · 「오열」 목숨값 +2.",
     "flavor": "꒰⑅ᵕ༚ᵕ꒱ → ｡ﾟ(ﾟ´ω`ﾟ)ﾟ｡ → ˚‧º·(˚ ˃̣̣̥⌓˂̣̣̥ )‧º·˚",
     "effects": [
-      { "when": "passive", "what": "offering_buff", "who": "source_unit", "params": { "amount": 1 }, "cond": { "mood": "방긋" } },
-      { "when": "passive", "what": "raid_buff", "who": "source_unit", "params": { "amount": 2 }, "cond": { "mood": "울먹" } },
-      { "when": "passive", "what": "life_buff", "who": "source_unit", "params": { "amount": 2 }, "cond": { "mood": "오열" } }
+      {
+        "when": "passive",
+        "what": "offering_buff",
+        "who": "source_unit",
+        "params": {
+          "amount": 1
+        },
+        "cond": {
+          "mood": "방긋"
+        }
+      },
+      {
+        "when": "passive",
+        "what": "raid_buff",
+        "who": "source_unit",
+        "params": {
+          "amount": 2
+        },
+        "cond": {
+          "mood": "울먹"
+        }
+      },
+      {
+        "when": "passive",
+        "what": "life_buff",
+        "who": "source_unit",
+        "params": {
+          "amount": 2
+        },
+        "cond": {
+          "mood": "오열"
+        }
+      }
     ]
   },
   {
-    "id": "DSR-U-006", "name": "집착하는 팬", "type": "U", "deck": "DSR", "cost": 3, "draft": true,
-    "life": 2, "offering": 0, "raid": 3, "role": "습격수",
+    "id": "DSR-U-006",
+    "name": "집착하는 팬",
+    "type": "U",
+    "deck": "DSR",
+    "cost": 3,
+    "draft": true,
+    "life": 2,
+    "offering": 0,
+    "raid": 3,
+    "role": "습격수",
     "text": "",
     "flavor": "좋아하는 거랑 갖고 싶은 거, 뭐가 달라?"
   },
   {
-    "id": "DSR-U-007", "name": "24시간 대기조", "type": "U", "deck": "DSR", "cost": 4, "draft": true,
-    "life": 5, "offering": 0, "raid": 1, "role": "벽",
+    "id": "DSR-U-007",
+    "name": "24시간 대기조",
+    "type": "U",
+    "deck": "DSR",
+    "cost": 4,
+    "draft": true,
+    "life": 5,
+    "offering": 0,
+    "raid": 1,
+    "role": "벽",
     "text": "",
     "flavor": "언제든 연락해. 진짜 언제든."
   },
   {
-    "id": "DSR-U-008", "name": "커플 프사", "type": "U", "deck": "DSR", "cost": 3, "draft": true,
-    "life": 3, "offering": 2, "raid": 0, "role": "주력 일꾼",
+    "id": "DSR-U-008",
+    "name": "커플 프사",
+    "type": "U",
+    "deck": "DSR",
+    "cost": 3,
+    "draft": true,
+    "life": 3,
+    "offering": 2,
+    "raid": 0,
+    "role": "주력 일꾼",
     "text": "",
     "flavor": "얼굴의 반은 잘렸지만, 손은 꼭 잡혀 있다."
   },
   {
-    "id": "DSR-U-009", "name": "구독 취소한 전 애인", "type": "U", "deck": "DSR", "cost": 3, "draft": true,
-    "life": 3, "offering": 1, "raid": 2, "role": "만능",
+    "id": "DSR-U-009",
+    "name": "구독 취소한 전 애인",
+    "type": "U",
+    "deck": "DSR",
+    "cost": 3,
+    "draft": true,
+    "life": 3,
+    "offering": 1,
+    "raid": 2,
+    "role": "만능",
     "text": "",
     "flavor": "알림은 껐는데, 프사는 매일 본다."
   },
   {
-    "id": "DSR-U-010", "name": "젖어드는 얼굴", "type": "U", "deck": "DSR", "cost": 3, "draft": true,
-    "life": 2, "offering": 2, "raid": 1, "role": "각성",
+    "id": "DSR-U-010",
+    "name": "젖어드는 얼굴",
+    "type": "U",
+    "deck": "DSR",
+    "cost": 3,
+    "draft": true,
+    "life": 2,
+    "offering": 2,
+    "raid": 1,
+    "role": "각성",
     "text": "",
-    "awaken": { "from": 1, "text": "이별할 때 OP +2." },
+    "awaken": {
+      "from": 1,
+      "text": "이별할 때 OP +2."
+    },
     "flavor": "웃는 얼굴 위로 물기가 번진다.",
-    "effects": [{ "when": { "trigger": "dependent_death" }, "what": "op_gain", "who": "self_owner", "params": { "amount": 2 }, "from": 1 }]
+    "effects": [
+      {
+        "when": {
+          "trigger": "dependent_death"
+        },
+        "what": "op_gain",
+        "who": "self_owner",
+        "params": {
+          "amount": 2
+        },
+        "from": 1
+      }
+    ]
   },
   {
-    "id": "DSR-U-011", "name": "밑 빠진 독", "type": "U", "deck": "DSR", "cost": 4, "draft": true,
-    "life": 4, "offering": 0, "raid": 1, "role": "각성",
+    "id": "DSR-U-011",
+    "name": "밑 빠진 독",
+    "type": "U",
+    "deck": "DSR",
+    "cost": 4,
+    "draft": true,
+    "life": 4,
+    "offering": 0,
+    "raid": 1,
+    "role": "각성",
     "text": "",
-    "awaken": { "from": 2, "text": "매 턴 시작, 의존 대상의 봉헌력만큼 OP." },
+    "awaken": {
+      "from": 2,
+      "text": "매 턴 시작, 의존 대상의 봉헌력만큼 OP."
+    },
     "flavor": "부어도 부어도, 바닥이 보이지 않는다.",
-    "effects": [{ "when": { "trigger": "turn_start" }, "what": "op_gain", "who": "self_owner", "params": { "amount": "dependent_offering" }, "from": 2 }]
+    "effects": [
+      {
+        "when": {
+          "trigger": "turn_start"
+        },
+        "what": "op_gain",
+        "who": "self_owner",
+        "params": {
+          "amount": "dependent_offering"
+        },
+        "from": 2
+      }
+    ]
   },
   {
-    "id": "DSR-U-012", "name": "사랑이라 믿는 아이", "type": "U", "deck": "DSR", "cost": 2, "draft": true,
-    "life": 2, "offering": 1, "raid": 1, "role": "각성",
+    "id": "DSR-U-012",
+    "name": "사랑이라 믿는 아이",
+    "type": "U",
+    "deck": "DSR",
+    "cost": 2,
+    "draft": true,
+    "life": 2,
+    "offering": 1,
+    "raid": 1,
+    "role": "각성",
     "text": "",
-    "awaken": { "from": 1, "text": "이 신도가 의존 대상인 동안 목숨값 +2." },
+    "awaken": {
+      "from": 1,
+      "text": "이 신도가 의존 대상인 동안 목숨값 +2."
+    },
     "flavor": "관심이면 다 사랑이야. 그렇지?",
-    "effects": [{ "when": "passive", "what": "life_buff", "who": "source_unit", "params": { "amount": 2 }, "cond": { "is_dependent": true }, "from": 1 }]
+    "effects": [
+      {
+        "when": "passive",
+        "what": "life_buff",
+        "who": "source_unit",
+        "params": {
+          "amount": 2
+        },
+        "cond": {
+          "is_dependent": true
+        },
+        "from": 1
+      }
+    ]
   },
   {
-    "id": "DSR-R-001", "name": "최애 몰빵", "type": "R", "deck": "DSR", "cost": 3, "subtag": "자가발전", "draft": true,
+    "id": "DSR-R-001",
+    "name": "최애 몰빵",
+    "type": "R",
+    "deck": "DSR",
+    "cost": 3,
+    "subtag": "자가발전",
+    "draft": true,
     "text": "의존 대상(내 신도)의 봉헌력 +1, 습격력 +1 (영구).",
     "flavor": "다 줄게. 나한테 남는 건 없어도 돼.",
-    "playCond": { "dependent_mine": true },
+    "playCond": {
+      "dependent_mine": true
+    },
     "effects": [
-      { "when": "active", "what": "offering_buff", "who": "dependent", "params": { "amount": 1, "duration": "permanent" } },
-      { "when": "active", "what": "raid_buff", "who": "dependent", "params": { "amount": 1, "duration": "permanent" } }
+      {
+        "when": "active",
+        "what": "offering_buff",
+        "who": "dependent",
+        "params": {
+          "amount": 1,
+          "duration": "permanent"
+        }
+      },
+      {
+        "when": "active",
+        "what": "raid_buff",
+        "who": "dependent",
+        "params": {
+          "amount": 1,
+          "duration": "permanent"
+        }
+      }
     ]
   },
   {
-    "id": "DSR-R-002", "name": "닮고 싶어", "type": "R", "deck": "DSR", "cost": 2, "subtag": "복사", "draft": true,
+    "id": "DSR-R-002",
+    "name": "닮고 싶어",
+    "type": "R",
+    "deck": "DSR",
+    "cost": 2,
+    "subtag": "복사",
+    "draft": true,
     "text": "내 신도 하나가 의존 대상의 봉헌력·습격력을 똑같이 가진다 (영구).",
     "flavor": "같은 옷, 같은 말투, 같은 노래.",
-    "playCond": { "dependent": true },
-    "target": { "side": "ally", "ghost": false },
-    "effects": [{ "when": "active", "what": "copy_stats", "who": "chosen" }]
+    "playCond": {
+      "dependent": true
+    },
+    "target": {
+      "side": "ally",
+      "ghost": false
+    },
+    "effects": [
+      {
+        "when": "active",
+        "what": "copy_stats",
+        "who": "chosen"
+      }
+    ]
   },
   {
-    "id": "DSR-R-003", "name": "떠나지 마", "type": "R", "deck": "DSR", "cost": 1, "subtag": "치유", "draft": true,
+    "id": "DSR-R-003",
+    "name": "떠나지 마",
+    "type": "R",
+    "deck": "DSR",
+    "cost": 1,
+    "subtag": "치유",
+    "draft": true,
     "text": "의존 대상(내 신도)의 상처를 모두 지우고, 이번 턴 목숨값 +2.",
     "flavor": "괜찮아, 내가 다 할게. 그러니까.",
-    "playCond": { "dependent_mine": true },
+    "playCond": {
+      "dependent_mine": true
+    },
     "effects": [
-      { "when": "active", "what": "heal", "who": "dependent" },
-      { "when": "active", "what": "life_buff", "who": "dependent", "params": { "amount": 2, "duration": "turn" } }
+      {
+        "when": "active",
+        "what": "heal",
+        "who": "dependent"
+      },
+      {
+        "when": "active",
+        "what": "life_buff",
+        "who": "dependent",
+        "params": {
+          "amount": 2,
+          "duration": "turn"
+        }
+      }
     ]
   },
   {
-    "id": "DSR-R-004", "name": "애인 납치", "type": "R", "deck": "DSR", "cost": 5, "subtag": "기생", "draft": true,
+    "id": "DSR-R-004",
+    "name": "애인 납치",
+    "type": "R",
+    "deck": "DSR",
+    "cost": 6,
+    "subtag": "기생",
+    "draft": true,
     "text": "상대 일상 신도 하나를 빼앗아 내 일상에 놓고 의존 대상으로 지정한다.",
     "flavor": "우리 원래 사귀는 사이였잖아. 기억 안 나?",
-    "playCond": { "day_slot": true },
-    "target": { "side": "enemy", "zone": "day", "ghost": false },
-    "effects": [{ "when": "active", "what": "steal", "who": "chosen" }]
+    "playCond": {
+      "day_slot": true
+    },
+    "target": {
+      "side": "enemy",
+      "zone": "day",
+      "ghost": false
+    },
+    "effects": [
+      {
+        "when": "active",
+        "what": "steal",
+        "who": "chosen"
+      }
+    ]
   },
   {
-    "id": "DSR-R-005", "name": "질투", "type": "R", "deck": "DSR", "cost": 2, "subtag": "기생", "draft": true,
+    "id": "DSR-R-005",
+    "name": "질투",
+    "type": "R",
+    "deck": "DSR",
+    "cost": 3,
+    "subtag": "기생",
+    "draft": true,
     "text": "의존 대상의 봉헌력만큼 OP. 의존 대상이 상대 신도라면 그 봉헌력 -1 (영구).",
     "flavor": "그 사람한테 주는 거, 나한테도 줘.",
-    "playCond": { "dependent": true },
+    "playCond": {
+      "dependent": true
+    },
     "effects": [
-      { "when": "active", "what": "op_gain", "who": "self_owner", "params": { "amount": "dependent_offering" } },
-      { "when": "active", "what": "offering_buff", "who": "dependent", "params": { "amount": -1, "duration": "permanent" }, "cond": { "dependent_enemy": true } }
+      {
+        "when": "active",
+        "what": "op_gain",
+        "who": "self_owner",
+        "params": {
+          "amount": "dependent_offering"
+        }
+      },
+      {
+        "when": "active",
+        "what": "offering_buff",
+        "who": "dependent",
+        "params": {
+          "amount": -1,
+          "duration": "permanent"
+        },
+        "cond": {
+          "dependent_enemy": true
+        }
+      }
     ]
   },
   {
-    "id": "DSR-R-006", "name": "너 없으면 안 돼", "type": "R", "deck": "DSR", "cost": 1, "subtag": "이별", "draft": true,
+    "id": "DSR-R-006",
+    "name": "너 없으면 안 돼",
+    "type": "R",
+    "deck": "DSR",
+    "cost": 1,
+    "subtag": "이별",
+    "draft": true,
     "text": "「오열」이라면 OP +2, 카드 1장. 그 후 신도 하나를 의존 대상으로 지정한다.",
     "flavor": "다음 사람은, 다음 사람은 안 떠날 거야.",
-    "target": { "side": "any", "ghost": false },
+    "target": {
+      "side": "any",
+      "ghost": false
+    },
     "effects": [
-      { "when": "active", "what": "op_gain", "who": "self_owner", "params": { "amount": 2 }, "cond": { "mood": "오열" } },
-      { "when": "active", "what": "draw", "who": "self_owner", "params": { "count": 1 }, "cond": { "mood": "오열" } },
-      { "when": "active", "what": "designate", "who": "chosen" }
+      {
+        "when": "active",
+        "what": "op_gain",
+        "who": "self_owner",
+        "params": {
+          "amount": 2
+        },
+        "cond": {
+          "mood": "오열"
+        }
+      },
+      {
+        "when": "active",
+        "what": "draw",
+        "who": "self_owner",
+        "params": {
+          "count": 1
+        },
+        "cond": {
+          "mood": "오열"
+        }
+      },
+      {
+        "when": "active",
+        "what": "designate",
+        "who": "chosen"
+      }
     ]
   },
   {
-    "id": "DSR-R-007", "name": "DM 폭탄", "type": "R", "deck": "DSR", "cost": 1, "subtag": "지정", "draft": true,
+    "id": "DSR-R-007",
+    "name": "DM 폭탄",
+    "type": "R",
+    "deck": "DSR",
+    "cost": 1,
+    "subtag": "지정",
+    "draft": true,
     "text": "신도 하나를 의존 대상으로 지정하고, 카드 1장 뽑는다.",
     "flavor": "자니? / 뭐해? / 왜 답장 안 해? / 미안 / 자니?",
-    "target": { "side": "any", "ghost": false },
+    "target": {
+      "side": "any",
+      "ghost": false
+    },
     "effects": [
-      { "when": "active", "what": "designate", "who": "chosen" },
-      { "when": "active", "what": "draw", "who": "self_owner", "params": { "count": 1 } }
+      {
+        "when": "active",
+        "what": "designate",
+        "who": "chosen"
+      },
+      {
+        "when": "active",
+        "what": "draw",
+        "who": "self_owner",
+        "params": {
+          "count": 1
+        }
+      }
     ]
   },
   {
-    "id": "DSR-S-001", "name": "하니모해 계정", "type": "S", "deck": "DSR", "cost": 3, "shrine_slot": "day", "draft": true,
+    "id": "DSR-S-001",
+    "name": "하니모해 계정",
+    "type": "S",
+    "deck": "DSR",
+    "cost": 3,
+    "shrine_slot": "day",
+    "draft": true,
     "text": "의존 대상이 내 신도라면 그 봉헌력 +1.",
     "flavor": "팔로워 3,412. 진짜 친구는 몇 명일까.",
-    "effects": [{ "when": "passive", "what": "offering_buff", "who": "dependent", "params": { "amount": 1 }, "cond": { "dependent_mine": true } }]
+    "effects": [
+      {
+        "when": "passive",
+        "what": "offering_buff",
+        "who": "dependent",
+        "params": {
+          "amount": 1
+        },
+        "cond": {
+          "dependent_mine": true
+        }
+      }
+    ]
   },
   {
-    "id": "DSR-S-002", "name": "알림 설정", "type": "S", "deck": "DSR", "cost": 2, "shrine_slot": "sanct", "draft": true,
+    "id": "DSR-S-002",
+    "name": "알림 설정",
+    "type": "S",
+    "deck": "DSR",
+    "cost": 2,
+    "shrine_slot": "sanct",
+    "draft": true,
     "text": "이별할 때 OP +2.",
     "flavor": "그 사람이 접속하면, 제일 먼저 안다.",
-    "effects": [{ "when": { "trigger": "dependent_death" }, "what": "op_gain", "who": "self_owner", "params": { "amount": 2 } }]
+    "effects": [
+      {
+        "when": {
+          "trigger": "dependent_death"
+        },
+        "what": "op_gain",
+        "who": "self_owner",
+        "params": {
+          "amount": 2
+        }
+      }
+    ]
   },
   {
-    "id": "DSR-S-003", "name": "공의존의 방", "type": "S", "deck": "DSR", "cost": 4, "shrine_slot": "special", "draft": true,
+    "id": "DSR-S-003",
+    "name": "공의존의 방",
+    "type": "S",
+    "deck": "DSR",
+    "cost": 4,
+    "shrine_slot": "special",
+    "draft": true,
     "text": "의존 대상이 상대 신도라면, 그가 봉헌할 때 나도 그 봉헌력만큼 OP.",
     "flavor": "네가 숨 쉬면 나도 숨 쉰다.",
-    "effects": [{ "when": "passive", "what": "dependent_leech", "who": "self_owner", "params": { "amount": "dependent_offering" }, "cond": { "dependent_enemy": true } }]
+    "effects": [
+      {
+        "when": "passive",
+        "what": "dependent_leech",
+        "who": "self_owner",
+        "params": {
+          "amount": "dependent_offering"
+        },
+        "cond": {
+          "dependent_enemy": true
+        }
+      }
+    ]
   }
 ]

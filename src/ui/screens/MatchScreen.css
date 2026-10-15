@@ -229,6 +229,15 @@
 .hand > .card-face.is-targetable:hover {
   transform: translateY(calc(var(--lift) * -1 - 8px)) scale(1.06);
 }
+.hand.is-tributing {
+  outline: 2px dashed var(--accent);
+  outline-offset: -4px;
+  border-radius: var(--r-lg);
+}
+.btn--tribute.is-on {
+  border-color: var(--accent);
+  color: var(--accent);
+}
 .hand.is-discarding {
   outline: 2px dashed var(--danger);
   outline-offset: -4px;

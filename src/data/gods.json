@@ -253,15 +253,26 @@
           "stage": 0,
           "cost": 0,
           "usage": "passive",
-          "text": "죽거나 소모된 카드는 사라지지 않고 병실 무덤에 쌓인다.",
-          "effects": []
+          "text": "죽거나 소모된 카드는 병실 무덤에 쌓인다. 매 턴 시작, 덱 맨 위 1장이 병실로 흘러간다.",
+          "effects": [
+            {
+              "when": {
+                "trigger": "turn_start"
+              },
+              "what": "mill",
+              "who": "self_owner",
+              "params": {
+                "count": 1
+              }
+            }
+          ]
         },
         {
           "stage": 1,
           "name": "아직 여기 있어",
           "cost": 2,
           "usage": "per_turn",
-          "text": "매 턴, 병실에서 신도 하나를 되살린다 — 목숨 1, 일그러진 채.",
+          "text": "매 턴, 병실에서 신도 하나를 되살린다 — 목숨 1, 일그러진 채. (매 턴 시작 1장이 병실로 흘러가는 건 계속)",
           "target": {
             "side": "ward",
             "type": "U"
@@ -271,6 +282,16 @@
               "when": "active",
               "what": "revive",
               "who": "chosen"
+            },
+            {
+              "when": {
+                "trigger": "turn_start"
+              },
+              "what": "mill",
+              "who": "self_owner",
+              "params": {
+                "count": 1
+              }
             }
           ]
         },
@@ -278,7 +299,7 @@
           "stage": 2,
           "cost": 1,
           "usage": "per_turn",
-          "text": "매 턴, 병실에서 신도 하나를 온전하게 되살린다.",
+          "text": "매 턴, 병실에서 신도 하나를 온전하게 되살린다. (매 턴 시작 1장이 병실로 흘러가는 건 계속)",
           "target": {
             "side": "ward",
             "type": "U"
@@ -290,6 +311,16 @@
               "who": "chosen",
               "params": {
                 "intact": true
+              }
+            },
+            {
+              "when": {
+                "trigger": "turn_start"
+              },
+              "what": "mill",
+              "who": "self_owner",
+              "params": {
+                "count": 1
               }
             }
           ]
@@ -344,7 +375,7 @@
           "stage": 1,
           "cost": 1,
           "usage": "per_turn",
-          "text": "매 턴 재지정. 의존 대상이 봉헌하면(어느 편이든) 나도 OP +1.",
+          "text": "매 턴 재지정. 의존 대상이 상대 신도라면, 그가 봉헌할 때 나도 OP +1 (기생). 내 신도라면 카드로 키운다 (자가발전).",
           "target": {
             "side": "any",
             "ghost": false
@@ -361,6 +392,9 @@
               "who": "self_owner",
               "params": {
                 "amount": 1
+              },
+              "cond": {
+                "dependent_enemy": true
               }
             }
           ]
@@ -370,7 +404,7 @@
           "name": "너 없으면 안 돼",
           "cost": 0,
           "usage": "per_turn",
-          "text": "재지정 무료. 의존 대상이 봉헌하면 그 봉헌력만큼 나도 OP. 이별하면 OP +3.",
+          "text": "재지정 무료. 기생 흡착 OP +1 유지. 이별하면 OP +3.",
           "target": {
             "side": "any",
             "ghost": false
@@ -386,7 +420,10 @@
               "what": "dependent_leech",
               "who": "self_owner",
               "params": {
-                "amount": "dependent_offering"
+                "amount": 1
+              },
+              "cond": {
+                "dependent_enemy": true
               }
             },
             {
@@ -481,7 +518,7 @@
           "name": "다 같이 무의미해지자",
           "cost": 0,
           "usage": "passive",
-          "text": "상대가 봉헌으로 얻는 OP -1. (이전 단계 효과 유지)",
+          "text": "상대가 봉헌으로 얻는 OP -2. (이전 단계 효과 유지)",
           "effects": [
             {
               "when": "passive",
@@ -509,7 +546,7 @@
               "what": "offering_tax",
               "who": "self_owner",
               "params": {
-                "amount": 1
+                "amount": 2
               }
             }
           ]

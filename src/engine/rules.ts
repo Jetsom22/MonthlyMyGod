@@ -298,6 +298,7 @@ export function createMatch(opts: MatchOptions): GameState {
       heartbroken: false,
       locked: false,
       onceFlags: [],
+      tributed: false,
     };
   };
   const s: GameState = {
@@ -319,7 +320,15 @@ export function createMatch(opts: MatchOptions): GameState {
   }
   s.first = opts.first ?? (rand(s) < 0.5 ? 0 : 1);
   s.active = s.first;
-  log(s, s.first, 'info', `정모 시작 — ${who(s, s.first)} 선공, ${who(s, other(s.first))} 후공 (첫 턴 신앙심 +${BALANCE.secondPlayerFaithBonus})`);
+  const second = s.players[other(s.first)];
+  for (let i = 0; i < BALANCE.secondPlayerExtraCards && second.deck.length; i++) second.hand.push(second.deck.pop()!);
+  second.op = BALANCE.secondPlayerStartOp;
+  log(
+    s,
+    s.first,
+    'info',
+    `정모 시작 — ${who(s, s.first)} 선공, ${who(s, other(s.first))} 후공 (손패 +${BALANCE.secondPlayerExtraCards}, 첫 턴 신앙심 +${BALANCE.secondPlayerFaithBonus})`,
+  );
   startTurn(s);
   return s;
 }
@@ -583,6 +592,15 @@ function runEffect(s: GameState, e: Effect, ctx: Ctx) {
       log(s, p.seat, 'info', `병실에 ${amt}장 더 쌓였다 (병실 ${wardCount(p)})`);
       return;
     }
+    case 'mill': {
+      const n = Math.min(e.params?.count ?? 1, p.deck.length);
+      for (let i = 0; i < n; i++) {
+        const id = p.deck.pop()!;
+        p.graveyard.push(id);
+        log(s, p.seat, 'info', `《${card(id).name}》이 병실로 흘러갔다`);
+      }
+      return;
+    }
     case 'revive': {
       if (p.day.length >= daySlots(p)) return;
       let idx = -1;
@@ -649,6 +667,7 @@ function runEffect(s: GameState, e: Effect, ctx: Ctx) {
     case 'slot_buff':
     case 'block_offering_op':
     case 'free_card':
+    case 'recur_card':
     case 'dependent_leech':
     case 'strike_reduce':
     case 'offering_tax':
@@ -778,6 +797,7 @@ function startTurn(s: GameState) {
   p.faith = vessel(p) + bonus;
   p.powerUsedThisTurn = false;
   p.locked = false;
+  p.tributed = false;
   for (const q of s.players) q.onceFlags = [];
   for (const u of allUnits(p)) {
     u.moved = false;
@@ -905,6 +925,16 @@ export function whyCantPlay(s: GameState, handIndex: number): Why {
   return null;
 }
 
+/** 헌납 — 손패 1장을 바쳐 이번 턴 신앙심 +1 (턴당 1회). 못 내는 카드를 연료로 바꾸는 출구 */
+export function whyCantTribute(s: GameState, handIndex?: number): Why {
+  const p = s.players[s.active];
+  if (s.phase !== 'prep') return '준비 페이즈에만 바칠 수 있다';
+  if (s.pending) return '먼저 선택을 마쳐야 한다';
+  if (p.tributed) return '이번 턴에 이미 바쳤다';
+  if (p.hand.length === 0 || (handIndex !== undefined && !p.hand[handIndex])) return '바칠 카드가 없다';
+  return null;
+}
+
 export function whyCantMove(s: GameState, uid: number): Why {
   const p = s.players[s.active];
   const u = allUnits(p).find((x) => x.uid === uid);
@@ -996,10 +1026,26 @@ export function applyAction(prev: GameState, action: GameAction): ApplyResult {
       } else {
         log(s, p.seat, 'play', `의식 《${c.name}》`);
         runEffects(s, c.effects ?? [], { seat: p.seat, chosen: target, depth: 0 });
-        p.graveyard.push(id); // 소모된 의식은 효과가 끝난 뒤 묘지(병실)로
+        // 소모된 의식은 효과가 끝난 뒤 묘지(병실)로 — 단, 되돌아오는 카드는 손패로
+        const recurs = passiveSources(s, p.seat).some((src) => src.e.what === 'recur_card' && src.e.params?.card === id && condOk(s, src.e, p.seat, src.uid));
+        if (recurs) {
+          p.hand.push(id);
+          log(s, p.seat, 'info', `《${c.name}》이 손으로 돌아왔다 — 순간은 끝나지 않는다`);
+        } else p.graveyard.push(id);
       }
       // 무위: 상대가 카드를 낼 때마다
       if (s.phase !== 'over') fireSide(s, other(p.seat), 'opponent_play', {}, 0);
+      return { state: s };
+    }
+
+    case 'tribute': {
+      const why = whyCantTribute(s, action.handIndex);
+      if (why) return { state: prev, error: why };
+      const [id] = p.hand.splice(action.handIndex, 1);
+      p.graveyard.push(id);
+      p.faith += BALANCE.tributeFaith;
+      p.tributed = true;
+      log(s, p.seat, 'faith', `《${card(id).name}》 헌납 — 신앙심 +${BALANCE.tributeFaith}`, { amount: BALANCE.tributeFaith });
       return { state: s };
     }
 
