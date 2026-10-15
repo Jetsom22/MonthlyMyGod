@@ -174,12 +174,13 @@ describe('무위 — 가장 조용한 혼돈', () => {
     expect(s.players[1].op).toBe(1);
   });
 
-  it('현현 — 상대가 봉헌으로 얻는 OP -1', () => {
+  it('현현 — 상대가 봉헌으로 얻는 OP -2', () => {
     let s = blank(PAT, VOI);
     s.players[1].stage = 2;
     put(s, 0, 'PAT-U-003', 'day'); // 봉헌 2
+    put(s, 0, 'PAT-U-001', 'day'); // 봉헌 1
     s = ok(s, { type: 'endTurn' });
-    expect(s.players[0].op).toBe(1);
+    expect(s.players[0].op).toBe(1); // 3 - 2
   });
 
   it('《아무것도 안 하기》 — OP +1, 이번 턴 더는 못 낸다', () => {
