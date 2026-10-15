@@ -1,6 +1,6 @@
 // 보드 위 신도/유령 한 명. 실효 스탯(버프·성지 반영)과 상태 배지를 보여준다.
 import { card } from '../../engine/db';
-import { deathSummary, effLife, effOffering, effRaid, stageName } from '../../engine/rules';
+import { deathSummary, effLife, effOffering, effRaid, god, stageName } from '../../engine/rules';
 import type { GameState, Unit } from '../../engine/types';
 import { CardArt } from './CardArt';
 import './UnitToken.css';
@@ -27,6 +27,8 @@ export function UnitToken({ s, u, targetable, selected, ready, dimmed, moveLabel
   const d = deathSummary(s, u);
   const isNew = u.enteredTurn === s.turn;
   const awake = c.awaken && owner.stage >= c.awaken.from;
+  // 누군가의 의존 대상인가 (내 편이든 상대든)
+  const clingers = s.players.filter((q) => q.dependent === u.uid).map((q) => god(q).character);
 
   const cls = [
     'unit',
@@ -48,15 +50,22 @@ export function UnitToken({ s, u, targetable, selected, ready, dimmed, moveLabel
         <div className="unit__name">{c.name}</div>
         <div className="unit__art">
           <CardArt cardId={u.cardId} compact />
+          {clingers.length > 0 && (
+            <span className="unit__cling" title={`${clingers.join('·')}의 의존 대상`}>
+              💗
+            </span>
+          )}
           <div className="unit__badges">
             {isNew && <span className="unit__badge unit__badge--new">NEW</span>}
             {awake && <span className="unit__badge unit__badge--awake">각성</span>}
             {u.doomed && <span className="unit__badge unit__badge--doom">소멸 예정</span>}
+            {u.twisted && <span className="unit__badge unit__badge--twisted">일그러짐</span>}
           </div>
         </div>
         <div className="unit__death">
           {d.ghosts > 0 && <span title="사망 시 유령 소환">☠→👻{d.ghosts}</span>}
           {d.op > 0 && <span title="사망 시 OP">☠→+{d.op}OP</span>}
+          {d.ward > 0 && <span title="사망 시 병실에 더 쌓임">☠→병실+{d.ward}</span>}
         </div>
         <div className="unit__stats">
           <span className={`stat stat--life${u.dmg > 0 ? ' is-hurt' : ''}`} title="남은 목숨 / 목숨값">

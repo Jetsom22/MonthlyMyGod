@@ -16,7 +16,10 @@ export type TriggerName =
   | 'ally_death' // 내 신도(유령 포함)가 죽을 때 — 성지·다른 신도가 반응
   | 'my_sacrifice' // 내가 무언가를 희생할 때
   | 'power_sacrifice' // 내가 권능으로 희생할 때
-  | 'turn_start'; // 내 턴 시작
+  | 'turn_start' // 내 턴 시작
+  | 'enemy_death' // 상대 신도가 죽을 때 (무위)
+  | 'opponent_play' // 상대가 카드를 낼 때 (무위)
+  | 'dependent_death'; // 의존 대상이 죽을 때 — 「이별」 (욕망)
 
 export type ActionVerb =
   | 'op_gain'
@@ -37,7 +40,21 @@ export type ActionVerb =
   | 'doom'
   | 'damage_unit'
   | 'damage_track'
-  | 'slot_buff';
+  | 'slot_buff'
+  // 영원 — 병실 무덤
+  | 'revive' // 병실에서 신도를 되살림 (params.intact: 온전히 / 아니면 목숨 1로 일그러진 채)
+  | 'ward_fill' // 병실에 N장 더 쌓음
+  | 'block_offering_op' // (지속) 봉헌 정산이 OP가 되지 않는다 — 영원의 제단
+  | 'free_card' // (지속) 특정 카드를 신앙심 없이 — 영원의 제단
+  // 욕망 — 의존 대상
+  | 'designate' // 의존 대상 지정
+  | 'copy_stats' // 고른 신도가 의존 대상의 봉헌력·습격력을 똑같이 가짐
+  | 'steal' // 상대 신도를 빼앗아 의존 대상으로
+  | 'dependent_leech' // (지속) 의존 대상이 봉헌하면 나도 OP
+  // 무위
+  | 'strike_reduce' // (지속) 습격으로 내 OP가 깎일 때 -N
+  | 'offering_tax' // (지속) 상대가 봉헌으로 얻는 OP -N
+  | 'lock_plays'; // 이번 턴 더는 카드를 낼 수 없다
 
 export type Selector =
   | 'self_owner' // 효과 주인 플레이어
@@ -48,10 +65,28 @@ export type Selector =
   | 'my_units'
   | 'my_ghosts'
   | 'my_day_ghosts'
-  | 'enemy_sanct_weakest'; // 자동 대상: 상대 성역에서 가장 빈사인 신도
+  | 'enemy_sanct_weakest' // 자동 대상: 상대 성역에서 가장 빈사인 신도
+  | 'enemy_units'
+  | 'enemy_day'
+  | 'enemy_sanct'
+  | 'opponent' // 상대 플레이어 (OP·드로우 등)
+  | 'dependent' // 의존 대상 (내 편이든 상대든)
+  | 'ward_best'; // 자동 대상: 병실에서 가장 비싼 신도
 
 /** 정적/동적 수치 — 문자열은 동적 키 */
-export type Amount = number | 'ghost_count' | 'sac_offering' | 'self_offering';
+export type Amount =
+  | number
+  | 'ghost_count'
+  | 'sac_offering'
+  | 'self_offering'
+  | 'ward_count' // 병실 무덤 매수
+  | 'ward_per5' // 병실 5장당 1
+  | 'threshold' // 현재 강림 문턱
+  | 'dependent_offering' // 의존 대상의 봉헌력
+  | 'dependent_raid';
+
+/** 이하니의 얼굴 — 의존 대상 상태 표시기 (컨셉 §5-④, 컨텐츠 §13) */
+export type Mood = 'none' | '방긋' | '울먹' | '오열';
 
 export interface Effect {
   when: When;
@@ -64,12 +99,21 @@ export interface Effect {
     duration?: 'turn' | 'permanent';
     zone?: Zone;
     keyword?: string;
+    intact?: boolean;
+    card?: string;
   };
   /** 추가 조건 */
   cond?: {
     zone?: Zone; // ally_death: 죽은 신도가 이 구역이었을 때만
     ghost?: boolean; // ally_death: 유령일 때만(true)/유령 아닐 때만(false)
     min_ghosts?: number;
+    mood?: Mood; // 효과 주인의 얼굴이 이 상태일 때만
+    is_dependent?: boolean; // 효과를 품은 신도가 의존 대상일 때만
+    dependent_mine?: boolean; // 의존 대상이 내 신도일 때만
+    dependent_enemy?: boolean; // 의존 대상이 상대 신도일 때만
+    relics?: boolean; // 삼종 유품이 병실에 모두 안치돼 있을 때만
+    self_zone?: Zone; // 효과를 품은 신도가 이 구역에 있을 때만
+    once_per_turn?: boolean;
   };
   /** 각성 — 효과 주인의 강림 단계가 이 단계 이상인 동안만 켜짐 (상태 조건, 소급 자동) */
   from?: number;
@@ -77,7 +121,7 @@ export interface Effect {
 
 /** 발동 시 고르는 대상의 필터 */
 export interface TargetSpec {
-  side: 'ally' | 'enemy' | 'any' | 'hand';
+  side: 'ally' | 'enemy' | 'any' | 'hand' | 'ward'; // ward = 내 병실 무덤
   zone?: Zone;
   ghost?: boolean; // true=유령만, false=유령 제외
   type?: CardType; // hand 대상일 때
@@ -102,6 +146,10 @@ export interface CardDef {
   awaken?: { from: number; text: string };
   ghost?: boolean;
   illust?: string;
+  tags?: string[]; // 예: '유품'
+  draft?: boolean; // 기획서에 정확값이 없어 웹판에서 임시로 채운 카드
+  /** 낼 수 있는 조건 */
+  playCond?: { relics?: boolean; dependent?: boolean; dependent_mine?: boolean; day_slot?: boolean };
 }
 
 export interface PowerStage {
@@ -144,6 +192,7 @@ export interface Unit {
   temp: { offering: number; raid: number; life: number };
   perm: { offering: number; raid: number; life: number };
   granted: Effect[]; // 부여된 키워드 (인내 권능·사규 개정)
+  twisted?: boolean; // 일그러진 채 되살아남 (영원)
 }
 
 export interface Shrine {
@@ -167,6 +216,16 @@ export interface PlayerState {
   powerUsedThisTurn: boolean;
   powerUsedLatent: number;
   turnsTaken: number;
+  /** 병실 무덤의 덤 — 카드 없이 쌓인 매수 (영원 「병실 N장 채움」). 병실 = graveyard + wardBonus */
+  wardBonus: number;
+  /** 의존 대상 uid (욕망) — 내 편이든 상대든 */
+  dependent: number | null;
+  /** 의존 대상을 잃고 아직 새로 지정하지 않음 → 오열 */
+  heartbroken: boolean;
+  /** 이번 턴 더는 카드를 낼 수 없다 (무위 《아무것도 안 하기》) */
+  locked: boolean;
+  /** 턴당 1회 효과가 이번 턴에 이미 터졌는지 */
+  onceFlags: string[];
 }
 
 export type Phase = 'prep' | 'action' | 'over';
@@ -197,6 +256,8 @@ export interface GameEvent {
     | 'win'
     | 'draw'
     | 'burn'
+    | 'revive'
+    | 'bond'
     | 'info';
   text: string;
   amount?: number;
@@ -217,7 +278,7 @@ export interface GameState {
   rngSeed: number;
 }
 
-export type TargetRef = { kind: 'unit'; uid: number } | { kind: 'hand'; index: number };
+export type TargetRef = { kind: 'unit'; uid: number } | { kind: 'hand'; index: number } | { kind: 'ward'; index: number };
 export type RaidTarget = { kind: 'unit'; uid: number } | { kind: 'track' };
 
 export type GameAction =

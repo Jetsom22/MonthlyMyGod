@@ -34,7 +34,7 @@
   font-size: 11px;
   font-weight: 700;
   background: var(--god-point);
-  color: #fff;
+  color: var(--god-on-point);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -69,7 +69,34 @@
 }
 .unit__badge--awake {
   background: var(--god-point);
-  color: #fff;
+  color: var(--god-on-point);
+}
+.unit__badge--twisted {
+  background: var(--g-ETN-erosion);
+  color: var(--paper);
+}
+.unit__cling {
+  position: absolute;
+  right: 4px;
+  bottom: 2px;
+  font-size: 18px;
+  animation: cling-beat 1.1s ease-in-out infinite;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+}
+@keyframes cling-beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.25);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.15);
+  }
 }
 .unit__badge--doom {
   background: var(--danger);

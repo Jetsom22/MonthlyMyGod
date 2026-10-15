@@ -9,6 +9,7 @@ import {
   daySlots,
   effOffering,
   effRaid,
+  effectiveCost,
   god,
   legalTargets,
   raidTargets,
@@ -100,6 +101,12 @@ export function MatchScreen({ config, onExit }: { config: MatchConfig; onExit: (
     return () => clearTimeout(t);
   }, [s, paused, speed]);
 
+  // 개발용: 브라우저 콘솔에서 window.__mygod 로 상태를 보고 바꿀 수 있다 (프로덕션 빌드에선 빠진다)
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    (window as unknown as { __mygod?: unknown }).__mygod = { state: s, setState: setS };
+  }, [s]);
+
   // Esc = 선택 취소
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setSel({ kind: 'none' });
@@ -111,18 +118,20 @@ export function MatchScreen({ config, onExit }: { config: MatchConfig; onExit: (
   const targets = useMemo(() => {
     const units = new Set<number>();
     const hand = new Set<number>();
+    const ward = new Set<number>(); // 병실 무덤 인덱스
     let track = false;
-    if (human === null || !humanTurn) return { units, hand, track };
+    if (human === null || !humanTurn) return { units, hand, ward, track };
+    const add = (t: TargetRef) => (t.kind === 'unit' ? units.add(t.uid) : t.kind === 'hand' ? hand.add(t.index) : ward.add(t.index));
     if (sel.kind === 'card') {
       const c = card(s.players[human].hand[sel.handIndex]);
-      if (c.target) for (const t of legalTargets(s, human, c.target, sel.handIndex)) (t.kind === 'unit' ? units.add(t.uid) : hand.add(t.index));
+      if (c.target) legalTargets(s, human, c.target, sel.handIndex).forEach(add);
     } else if (sel.kind === 'power') {
       const st = currentPowerStage(s.players[human]);
-      if (st?.target) for (const t of legalTargets(s, human, st.target)) if (t.kind === 'unit') units.add(t.uid);
+      if (st?.target) legalTargets(s, human, st.target).forEach(add);
     } else if (sel.kind === 'raid') {
       for (const t of raidTargets(s, sel.uid)) (t.kind === 'unit' ? units.add(t.uid) : (track = true));
     }
-    return { units, hand, track };
+    return { units, hand, ward, track };
   }, [s, sel, human, humanTurn]);
 
   const targeting = sel.kind !== 'none';
@@ -156,6 +165,12 @@ export function MatchScreen({ config, onExit }: { config: MatchConfig; onExit: (
       return flash(u.raided ? '이번 턴에 이미 습격했다' : '습격력이 없다 — 수비만 선다');
     }
     if (targeting) setSel({ kind: 'none' });
+  };
+
+  const onWardPick = (index: number) => {
+    const t: TargetRef = { kind: 'ward', index };
+    if (sel.kind === 'card') act({ type: 'playCard', handIndex: sel.handIndex, target: t });
+    else if (sel.kind === 'power') act({ type: 'power', target: t });
   };
 
   const onPower = () => {
@@ -242,6 +257,7 @@ export function MatchScreen({ config, onExit }: { config: MatchConfig; onExit: (
     if (human !== null && s.pending?.seat === human) return `버릴 카드를 ${s.pending.count}장 고른다`;
     if (!humanTurn) return `${god(s.players[s.active]).character} 생각 중…`;
     if (sel.kind === 'card') return `《${card(s.players[human!].hand[sel.handIndex]).name}》 — 대상을 고른다 (Esc 취소)`;
+    if (targets.ward.size) return '병실 무덤에서 되살릴 신도를 고른다 (Esc 취소)';
     if (sel.kind === 'power') return `권능 — 대상을 고른다 (Esc 취소)`;
     if (sel.kind === 'raid') return targets.track ? '상대 성역이 비었다 — 일상 신도를 처형하거나 트랙을 직격한다' : '도발 — 상대 성역 신도부터 노려야 한다';
     return PHASE_HINT[s.phase];
@@ -335,6 +351,7 @@ export function MatchScreen({ config, onExit }: { config: MatchConfig; onExit: (
                     key={`${id}-${i}`}
                     cardId={id}
                     stage={me.stage}
+                    cost={effectiveCost(s, me.seat, id)}
                     disabled={!pickable && !!why}
                     reason={why}
                     selected={sel.kind === 'card' && sel.handIndex === i}
@@ -371,6 +388,24 @@ export function MatchScreen({ config, onExit }: { config: MatchConfig; onExit: (
         <WinOverlay s={s} human={human} onAgain={() => { setS(newMatch()); setSel({ kind: 'none' }); }} onExit={onExit} />
       )}
       {rulesOpen && <RulesModal onClose={() => setRulesOpen(false)} />}
+      {me && targets.ward.size > 0 && (
+        <div className="ward-pick" role="dialog" aria-label="병실 무덤">
+          <div className="ward-pick__card" data-god={god(me).deck}>
+            <header>
+              <b className="display">병실 무덤</b>
+              <span>되살릴 신도를 고른다 — 고른 카드는 병실을 떠난다</span>
+              <button type="button" className="btn btn--small btn--ghost" onClick={() => setSel({ kind: 'none' })}>
+                취소
+              </button>
+            </header>
+            <div className="ward-pick__list">
+              {me.graveyard.map((id, i) =>
+                targets.ward.has(i) ? <CardFace key={`${id}-${i}`} cardId={id} stage={me.stage} targetable onClick={() => onWardPick(i)} /> : null,
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

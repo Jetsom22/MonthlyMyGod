@@ -7,13 +7,18 @@ import {
   applyAction,
   currentPowerStage,
   deathSummary,
+  dependentUnit,
   effOffering,
   effRaid,
+  effectiveCost,
   god,
   legalTargets,
   other,
   raidTargets,
+  RELIC_IDS,
   remainingLife,
+  sumPassive,
+  wardCount,
   whyCantMove,
   whyCantPlay,
   whyCantPower,
@@ -35,6 +40,13 @@ const W = {
   ghostManifest: 1.4, // 인내 현현: 유령 1 = 매 턴 OP 1
   hand: 0.45,
   threat: 0.7,
+  relic: 2.2, // 영원: 병실에 안치된 유품 하나
+  relicsAll: 3.5, // 영원: 삼종 완성
+  ward: 0.08, // 영원: 병실 1장
+  dependent: 1.2, // 욕망: 의존 대상이 있다
+  leech: 1.2, // 욕망: 의존 대상이 봉헌할 때 흡착되는 OP
+  shrine: 1.4, // 성지 — 판에 남는 상시 이득
+  idleDaySlot: 0.8, // 봉헌 0인 신도가 일상 자리를 막고 있음
 };
 
 function unitValue(s: GameState, u: Unit, p: PlayerState): number {
@@ -45,13 +57,19 @@ function unitValue(s: GameState, u: Unit, p: PlayerState): number {
   const d = deathSummary(s, u);
   const deathVal = d.ghosts * W.deathGhost + d.op * W.deathOp;
   let v = 0.5; // 존재 자체
+  // 《영원의 제단》 아래에선 봉헌이 OP가 되지 않는다
+  const offW = sumPassive(s, p.seat, 'block_offering_op') > 0 ? 0 : 1;
   if (u.zone === 'day') {
-    v += (off - tempOff) * W.dayOffering + tempOff * W.tempOffering + effRaid(s, u) * W.dayRaid + life * W.dayLife + deathVal * 0.6;
+    v += (off - tempOff) * W.dayOffering * offW + tempOff * W.tempOffering * offW + effRaid(s, u) * W.dayRaid + life * W.dayLife + deathVal * 0.6;
   } else {
     v += effRaid(s, u) * W.sanctRaid + life * W.sanctLife + deathVal * 0.9;
     if (god(p).deck === 'WCH') v += off * W.witchSacPotential;
   }
+  const relic = god(p).deck === 'ETN' && !!c.tags?.includes('유품');
+  if (u.zone === 'day' && off === 0 && !c.ghost && !relic) v -= W.idleDaySlot;
   if (c.ghost && god(p).deck === 'PAT' && p.stage >= 2) v += W.ghostManifest;
+  // 영원: 판 위의 유품은 "안치되는 중" — 병실에 들어갈 때 가치의 절반 (같은 유품이 이미 안치됐으면 0)
+  if (relic && !p.graveyard.includes(u.cardId)) v += W.relic * 0.5;
   return v;
 }
 
@@ -64,6 +82,22 @@ function sideScore(s: GameState, p: PlayerState): number {
   let v = (done + Math.min(p.op, th[p.stage])) * norm * W.op + p.stage * W.stage;
   for (const u of allUnits(p)) v += unitValue(s, u, p);
   v += Math.min(p.hand.length, 7) * W.hand;
+  v += p.shrines.length * W.shrine;
+  // 《아무것도 안 하기》로 스스로 묶였는데 낼 수 있는 카드가 남았다면 그만큼 손해
+  if (p.locked && s.active === p.seat && s.phase === 'prep') {
+    v -= p.hand.filter((id) => effectiveCost(s, p.seat, id) <= p.faith).length * 0.9;
+  }
+  // 영원 — 병실 무덤과 삼종 유품
+  if (g.deck === 'ETN') {
+    const enshrined = RELIC_IDS.filter((id) => p.graveyard.includes(id)).length;
+    v += enshrined * W.relic + (enshrined === RELIC_IDS.length ? W.relicsAll : 0) + wardCount(p) * W.ward;
+  }
+  // 욕망 — 의존 대상
+  const d = dependentUnit(s, p);
+  if (d) {
+    v += W.dependent;
+    if (d.zone === 'day') v += Math.min(3, sumPassive(s, p.seat, 'dependent_leech')) * W.leech;
+  }
   return v;
 }
 

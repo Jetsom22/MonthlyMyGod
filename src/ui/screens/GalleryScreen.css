@@ -105,3 +105,10 @@
   font-size: 11px;
   color: var(--ink-faint);
 }
+
+.gallery__draft {
+  color: var(--accent);
+}
+.gallery__tabs {
+  flex-wrap: wrap;
+}

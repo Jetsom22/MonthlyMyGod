@@ -2,6 +2,9 @@
 import neutral from '../data/cards/neutral.json';
 import patience from '../data/cards/patience.json';
 import witch from '../data/cards/witch.json';
+import eternity from '../data/cards/eternity.json';
+import desire from '../data/cards/desire.json';
+import voidCards from '../data/cards/void.json';
 import gods from '../data/gods.json';
 import decks from '../data/decks.json';
 import type { CardDef, DeckCode, GodDef } from './types';
@@ -10,6 +13,9 @@ export const ALL_CARDS: CardDef[] = [
   ...(neutral as CardDef[]),
   ...(patience as CardDef[]),
   ...(witch as CardDef[]),
+  ...(eternity as CardDef[]),
+  ...(desire as CardDef[]),
+  ...(voidCards as CardDef[]),
 ];
 
 export const CARDS: Record<string, CardDef> = Object.fromEntries(ALL_CARDS.map((c) => [c.id, c]));

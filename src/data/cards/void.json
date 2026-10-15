@@ -1,0 +1,136 @@
+[
+  {
+    "id": "VOI-U-001", "name": "늘어진 추리닝", "type": "U", "deck": "VOI", "cost": 1, "draft": true,
+    "life": 2, "offering": 1, "raid": 1, "role": "저가",
+    "text": "",
+    "flavor": "밖에 나갈 일이 없으니까."
+  },
+  {
+    "id": "VOI-U-002", "name": "눈팅족", "type": "U", "deck": "VOI", "cost": 1, "draft": true,
+    "life": 2, "offering": 1, "raid": 0, "role": "저가",
+    "text": "",
+    "flavor": "다 보고 있다. 아무 말도 안 할 뿐."
+  },
+  {
+    "id": "VOI-U-003", "name": "방구석 이불", "type": "U", "deck": "VOI", "cost": 2, "draft": true,
+    "life": 4, "offering": 0, "raid": 0, "role": "벽",
+    "text": "",
+    "flavor": "여기서 나가면 뭔가 해야 하잖아."
+  },
+  {
+    "id": "VOI-U-004", "name": "택배 상자 탑", "type": "U", "deck": "VOI", "cost": 3, "draft": true,
+    "life": 5, "offering": 0, "raid": 1, "role": "벽",
+    "text": "",
+    "flavor": "뜯지 않은 것도 있다. 뭘 샀는지도 모른다."
+  },
+  {
+    "id": "VOI-U-005", "name": "라면 봉지", "type": "U", "deck": "VOI", "cost": 1, "draft": true,
+    "life": 1, "offering": 1, "raid": 0, "role": "저가",
+    "text": "사망 시: 상대 OP -1.",
+    "flavor": "치우지 않으면 아무도 안 치운다.",
+    "effects": [{ "when": { "trigger": "on_death" }, "what": "op_lose", "who": "opponent", "params": { "amount": 1 } }]
+  },
+  {
+    "id": "VOI-U-006", "name": "악플러", "type": "U", "deck": "VOI", "cost": 2, "draft": true,
+    "life": 2, "offering": 0, "raid": 2, "role": "습격수",
+    "text": "",
+    "flavor": "그거 해서 뭐 하게요?"
+  },
+  {
+    "id": "VOI-U-007", "name": "무의미한 분탕", "type": "U", "deck": "VOI", "cost": 3, "draft": true,
+    "life": 2, "offering": 0, "raid": 2, "role": "잠식",
+    "text": "성역에 있는 동안 상대 신도 전부 습격력 -1.",
+    "flavor": "나만 이런 거 아니야. 다들 같이 무의미해지자.",
+    "effects": [{ "when": "passive", "what": "raid_buff", "who": "enemy_units", "params": { "amount": -1 }, "cond": { "self_zone": "sanct" } }]
+  },
+  {
+    "id": "VOI-U-008", "name": "커뮤니티 고인물", "type": "U", "deck": "VOI", "cost": 3, "draft": true,
+    "life": 3, "offering": 1, "raid": 1, "role": "만능",
+    "text": "",
+    "flavor": "가입일 2009년. 글 0개. 댓글 4,812개."
+  },
+  {
+    "id": "VOI-U-009", "name": "가능성으로만 남은 사람", "type": "U", "deck": "VOI", "cost": 3, "draft": true,
+    "life": 3, "offering": 2, "raid": 0, "role": "주력 일꾼",
+    "text": "",
+    "flavor": "안 했으니까, 못 한 건 아니야."
+  },
+  {
+    "id": "VOI-U-010", "name": "아무것도 안 한 하루", "type": "U", "deck": "VOI", "cost": 2, "draft": true,
+    "life": 2, "offering": 1, "raid": 0, "role": "각성",
+    "text": "",
+    "awaken": { "from": 1, "text": "매 턴 시작, OP +1." },
+    "flavor": "오늘도 무사히, 아무 일도 없었다.",
+    "effects": [{ "when": { "trigger": "turn_start" }, "what": "op_gain", "who": "self_owner", "params": { "amount": 1 }, "from": 1 }]
+  },
+  {
+    "id": "VOI-U-011", "name": "미뤄둔 꿈", "type": "U", "deck": "VOI", "cost": 4, "draft": true,
+    "life": 4, "offering": 0, "raid": 1, "role": "각성",
+    "text": "",
+    "awaken": { "from": 2, "text": "상대 신도 전부 봉헌력 -1." },
+    "flavor": "언젠가는. 그 언젠가가 오지 않게.",
+    "effects": [{ "when": "passive", "what": "offering_buff", "who": "enemy_units", "params": { "amount": -1 }, "from": 2 }]
+  },
+  {
+    "id": "VOI-U-012", "name": "모니터 불빛", "type": "U", "deck": "VOI", "cost": 2, "draft": true,
+    "life": 2, "offering": 1, "raid": 1, "role": "만능",
+    "text": "",
+    "flavor": "방에 켜진 유일한 빛."
+  },
+  {
+    "id": "VOI-R-001", "name": "내일 할게", "type": "R", "deck": "VOI", "cost": 1, "subtag": "미루기", "draft": true,
+    "text": "카드 1장 뽑고, 상대 OP -1.",
+    "flavor": "진짜로. 내일은 진짜로.",
+    "effects": [
+      { "when": "active", "what": "draw", "who": "self_owner", "params": { "count": 1 } },
+      { "when": "active", "what": "op_lose", "who": "opponent", "params": { "amount": 1 } }
+    ]
+  },
+  {
+    "id": "VOI-R-002", "name": "다 귀찮아", "type": "R", "deck": "VOI", "cost": 2, "subtag": "잠식", "draft": true,
+    "text": "상대 신도 하나의 봉헌력 -1 (영구).",
+    "flavor": "그거 열심히 해서 뭐가 달라지는데.",
+    "target": { "side": "enemy", "ghost": false },
+    "effects": [{ "when": "active", "what": "offering_buff", "who": "chosen", "params": { "amount": -1, "duration": "permanent" } }]
+  },
+  {
+    "id": "VOI-R-003", "name": "분탕 치기", "type": "R", "deck": "VOI", "cost": 3, "subtag": "잠식", "draft": true,
+    "text": "상대 OP -2.",
+    "flavor": "새 글이 올라올 때마다, 조용히 물을 흐린다.",
+    "effects": [{ "when": "active", "what": "op_lose", "who": "opponent", "params": { "amount": 2 } }]
+  },
+  {
+    "id": "VOI-R-004", "name": "읽씹", "type": "R", "deck": "VOI", "cost": 1, "subtag": "잠식", "draft": true,
+    "text": "상대 성역 신도 하나의 습격력 -1 (영구).",
+    "flavor": "읽음 1. 그걸로 끝.",
+    "target": { "side": "enemy", "zone": "sanct" },
+    "effects": [{ "when": "active", "what": "raid_buff", "who": "chosen", "params": { "amount": -1, "duration": "permanent" } }]
+  },
+  {
+    "id": "VOI-R-005", "name": "아무것도 안 하기", "type": "R", "deck": "VOI", "cost": 0, "subtag": "무위", "draft": true,
+    "text": "OP +1. 이번 턴 더는 카드를 낼 수 없다.",
+    "flavor": "가장 확실한 성공은, 시작하지 않는 것.",
+    "effects": [
+      { "when": "active", "what": "op_gain", "who": "self_owner", "params": { "amount": 1 } },
+      { "when": "active", "what": "lock_plays", "who": "self_owner" }
+    ]
+  },
+  {
+    "id": "VOI-S-001", "name": "어두운 방", "type": "S", "deck": "VOI", "cost": 2, "shrine_slot": "day", "draft": true,
+    "text": "습격으로 깎이는 내 OP -1.",
+    "flavor": "커튼은 3년째 닫혀 있다.",
+    "effects": [{ "when": "passive", "what": "strike_reduce", "who": "self_owner", "params": { "amount": 1 } }]
+  },
+  {
+    "id": "VOI-S-002", "name": "방치된 댓글창", "type": "S", "deck": "VOI", "cost": 3, "shrine_slot": "sanct", "draft": true,
+    "text": "상대 신도가 죽을 때 OP +1.",
+    "flavor": "누가 망하면 제일 먼저 와서 본다.",
+    "effects": [{ "when": { "trigger": "enemy_death" }, "what": "op_gain", "who": "self_owner", "params": { "amount": 1 } }]
+  },
+  {
+    "id": "VOI-S-003", "name": "무중력 이불속", "type": "S", "deck": "VOI", "cost": 4, "shrine_slot": "special", "draft": true,
+    "text": "내 성역 신도 목숨값 +2.",
+    "flavor": "여기선 아무것도 나를 못 건드려.",
+    "effects": [{ "when": "passive", "what": "life_buff", "who": "all_my_sanct", "params": { "amount": 2 } }]
+  }
+]

@@ -185,7 +185,7 @@
 .phasebar__steps span.is-on {
   background: var(--god-point);
   border-color: var(--god-point);
-  color: #fff;
+  color: var(--god-on-point);
   font-weight: 800;
 }
 .phasebar__steps b {
@@ -388,4 +388,49 @@
   .phasebar {
     border-radius: var(--r-lg);
   }
+}
+
+/* ── 병실 무덤 고르기 ── */
+.ward-pick {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  display: grid;
+  place-items: center;
+  padding: var(--sp-4);
+  background: var(--bg-overlay);
+  animation: fade-in var(--dur-mid) ease;
+}
+.ward-pick__card {
+  width: min(880px, 100%);
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--god-point) 12%, var(--bg-raised));
+  border: 1.5px solid var(--god-point);
+}
+.ward-pick__card header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+.ward-pick__card header b {
+  font-size: 22px;
+}
+.ward-pick__card header span {
+  flex: 1;
+  color: var(--ink-dim);
+  font-size: 13px;
+}
+.ward-pick__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  justify-content: center;
+  overflow-y: auto;
+  padding: var(--sp-3) 0;
 }

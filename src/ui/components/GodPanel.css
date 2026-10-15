@@ -200,3 +200,77 @@
     box-shadow: 0 0 0 1px var(--god-point);
   }
 }
+
+/* ── 신별 특수 줄 (영원 병실 · 욕망 얼굴) ── */
+.special-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+  font-size: 12px;
+}
+.special-row__head {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  color: var(--ink-dim);
+}
+.special-row__head b {
+  color: var(--god-point);
+  font-size: 16px;
+}
+.relics {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.relic {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px dashed var(--line-strong);
+  font-size: 15px;
+  filter: grayscale(1) opacity(0.45);
+  transition: filter var(--dur-mid), border-color var(--dur-mid);
+}
+.relic.is-on {
+  border: 1.5px solid var(--god-point);
+  background: color-mix(in srgb, var(--god-point) 22%, transparent);
+  filter: none;
+}
+.relics__label {
+  margin-left: 4px;
+  color: var(--ink-faint);
+  font-size: 11px;
+}
+.bond__face {
+  font-weight: 700;
+}
+.bond__face span {
+  color: var(--god-point);
+  font-weight: 400;
+  white-space: nowrap;
+}
+.bond__target {
+  color: var(--ink-dim);
+}
+.bond__target em {
+  font-style: normal;
+  color: var(--danger);
+  font-size: 11px;
+}
+.bond--울먹 .bond__face span {
+  color: var(--target);
+}
+.bond--오열 {
+  border-color: var(--danger);
+}
+.bond--오열 .bond__face span {
+  color: var(--danger);
+  animation: pulse-soft 1s ease-in-out infinite;
+}

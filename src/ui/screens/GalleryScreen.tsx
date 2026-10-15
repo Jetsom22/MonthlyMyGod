@@ -7,7 +7,7 @@ import { CardFace } from '../components/CardFace';
 import { DECK_LABEL, USAGE_LABEL } from '../text';
 import './GalleryScreen.css';
 
-const TABS = ['ALL', 'PAT', 'WCH', 'NEU'] as const;
+const TABS = ['ALL', 'PAT', 'WCH', 'ETN', 'DSR', 'VOI', 'NEU'] as const;
 
 export function GalleryScreen({ onBack }: { onBack: () => void }) {
   const [tab, setTab] = useState<(typeof TABS)[number]>('ALL');
@@ -80,13 +80,14 @@ export function GalleryScreen({ onBack }: { onBack: () => void }) {
 
       <section className="gallery__grid">
         {cards.map((c) => {
-          const n = counts(c.deck)(c.id) + (c.deck === 'NEU' ? counts('PAT')(c.id) + counts('WCH')(c.id) : 0);
+          const n = c.deck === 'NEU' ? Object.keys(DECKS).reduce((a, d) => a + counts(d)(c.id), 0) : counts(c.deck)(c.id);
           return (
             <div key={c.id} className="gallery__item">
               <CardFace cardId={c.id} size="large" showFlavor stage={preview} />
               <div className="gallery__meta">
                 <code>{c.id}</code>
                 {c.type !== 'T' && <span>{n > 0 ? `기본 덱 ×${n}` : '기본 덱 미포함'}</span>}
+                {c.draft && <span className="gallery__draft">임시 설계</span>}
               </div>
             </div>
           );

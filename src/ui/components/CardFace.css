@@ -48,7 +48,7 @@
   gap: 6px;
   padding: 6px 8px 4px;
   background: var(--god-point);
-  color: #fff;
+  color: var(--god-on-point);
   min-height: 30px;
 }
 .card-face__cost {
@@ -63,6 +63,9 @@
   font-weight: 800;
   font-size: 13px;
 }
+.card-face__cost.is-changed {
+  background: var(--good);
+}
 .card-face__name {
   font-weight: 700;
   font-size: 12.5px;
@@ -72,13 +75,30 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.card-face--large .card-face__name {
+.card-face--large .card-face__cost.is-changed {
+  background: var(--good);
+}
+.card-face__name {
   font-size: 15px;
   white-space: normal;
 }
 .card-face__art {
+  position: relative;
   flex: 0 0 38%;
   min-height: 0;
+}
+.card-face__draft {
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  padding: 0 5px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 15px;
+  background: rgba(43, 37, 48, 0.75);
+  color: var(--paper);
+  letter-spacing: 0.04em;
 }
 .card-face--large .card-face__art {
   flex-basis: 44%;

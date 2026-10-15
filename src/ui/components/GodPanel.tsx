@@ -1,8 +1,8 @@
 // 한 소환자의 패널 — 초상·신·강림 트랙·신앙심·권능·성지·카드 수.
 import { card } from '../../engine/db';
-import { currentPowerStage, god, stageName, vessel } from '../../engine/rules';
-import type { GameState, Seat, Shrine } from '../../engine/types';
-import { GOD_GLYPH } from '../art';
+import { currentPowerStage, dependentUnit, god, mood, RELIC_IDS, stageName, vessel, wardCount } from '../../engine/rules';
+import type { GameState, PlayerState, Seat, Shrine } from '../../engine/types';
+import { GLYPH, GOD_GLYPH, MOOD_FACE } from '../art';
 import { SLOT_LABEL, USAGE_LABEL } from '../text';
 import { DescentTrack } from './DescentTrack';
 import './GodPanel.css';
@@ -59,6 +59,9 @@ export function GodPanel({ s, seat, pending, label, powerWhy, powerArmed, canAct
         </span>
       </div>
 
+      {g.deck === 'ETN' && <WardRow p={p} />}
+      {g.deck === 'DSR' && <BondRow s={s} p={p} />}
+
       <div className={`power${powerArmed ? ' is-armed' : ''}`}>
         <div className="power__head">
           <span className="power__name">「{st?.name ?? g.power.name}」</span>
@@ -90,6 +93,55 @@ export function GodPanel({ s, seat, pending, label, powerWhy, powerArmed, canAct
         <span title="버린 카드·묘지">⚰ {p.graveyard.length}</span>
       </footer>
     </section>
+  );
+}
+
+/** 영원 — 병실 무덤 매수와 삼종 유품 안치 상태 */
+function WardRow({ p }: { p: PlayerState }) {
+  const n = wardCount(p);
+  return (
+    <div className="special-row" title="죽거나 소모된 카드가 쌓이는 곳. 5장마다 병실 참조 카드가 강해진다.">
+      <div className="special-row__head">
+        <span>병실 무덤</span>
+        <b>{n}장</b>
+        <small>(5장당 +{Math.floor(n / 5)})</small>
+      </div>
+      <div className="relics">
+        {RELIC_IDS.map((id) => {
+          const on = p.graveyard.includes(id);
+          return (
+            <span key={id} className={`relic${on ? ' is-on' : ''}`} title={`${card(id).name} — ${on ? '안치됨' : '아직'}`}>
+              {GLYPH[id]}
+            </span>
+          );
+        })}
+        <span className="relics__label">{RELIC_IDS.every((id) => p.graveyard.includes(id)) ? '삼종 안치 — 영원의 순간!' : '삼종 유품'}</span>
+      </div>
+    </div>
+  );
+}
+
+/** 욕망 — 하니모해의 얼굴 = 의존 대상 상태 표시기 */
+function BondRow({ s, p }: { s: GameState; p: PlayerState }) {
+  const m = mood(s, p);
+  const d = dependentUnit(s, p);
+  return (
+    <div className={`special-row bond bond--${m}`}>
+      <div className="bond__face">
+        하니모해 <span>{MOOD_FACE[m]}</span>
+      </div>
+      <div className="bond__target">
+        {d ? (
+          <>
+            💗 《{card(d.cardId).name}》{d.owner !== p.seat && <em> 상대 신도</em>}
+          </>
+        ) : m === '오열' ? (
+          '💔 의존 대상을 잃었다'
+        ) : (
+          '의존 대상 없음'
+        )}
+      </div>
+    </div>
   );
 }
 

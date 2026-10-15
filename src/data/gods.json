@@ -1,105 +1,520 @@
 [
   {
-    "id": "PAT-G-001", "deck": "PAT", "name": "인내의 신", "epithet": "꺼트리지 못하는—",
-    "character": "한영일", "nickname": "야근", "deficit": "뒤늦은 후회",
+    "id": "PAT-G-001",
+    "deck": "PAT",
+    "name": "인내의 신",
+    "epithet": "꺼트리지 못하는—",
+    "character": "한영일",
+    "nickname": "야근",
+    "deficit": "뒤늦은 후회",
     "archetype": "유령 컨베이어",
     "blurb": "유령을 만들고, 판을 넓혀, 유령 수만큼 터뜨린다. 죽어서도 못 쉬는 군단.",
     "playable": true,
-    "track": { "thresholds": [12, 16, 20], "vessels": [3, 6, 9] },
+    "track": {
+      "thresholds": [
+        12,
+        16,
+        20
+      ],
+      "vessels": [
+        3,
+        6,
+        9
+      ]
+    },
     "power": {
       "name": "죽어서도 일하라",
       "stages": [
         {
-          "stage": 0, "cost": 2, "usage": "once_total",
+          "stage": 0,
+          "cost": 2,
+          "usage": "once_total",
           "text": "내 신도 하나에 「사망 시: 유령 소환」 부여 (영구).",
-          "target": { "side": "ally", "ghost": false },
-          "effects": [{ "when": "active", "what": "grant_keyword", "who": "chosen", "params": { "keyword": "on_death:summon_token", "token": "PAT-T-001", "count": 1 } }]
+          "target": {
+            "side": "ally",
+            "ghost": false
+          },
+          "effects": [
+            {
+              "when": "active",
+              "what": "grant_keyword",
+              "who": "chosen",
+              "params": {
+                "keyword": "on_death:summon_token",
+                "token": "PAT-T-001",
+                "count": 1
+              }
+            }
+          ]
         },
         {
-          "stage": 1, "cost": 1, "usage": "per_turn",
+          "stage": 1,
+          "cost": 1,
+          "usage": "per_turn",
           "text": "매 턴, 내 신도 하나에 「사망 시: 유령 소환」 부여.",
-          "target": { "side": "ally", "ghost": false },
-          "effects": [{ "when": "active", "what": "grant_keyword", "who": "chosen", "params": { "keyword": "on_death:summon_token", "token": "PAT-T-001", "count": 1 } }]
+          "target": {
+            "side": "ally",
+            "ghost": false
+          },
+          "effects": [
+            {
+              "when": "active",
+              "what": "grant_keyword",
+              "who": "chosen",
+              "params": {
+                "keyword": "on_death:summon_token",
+                "token": "PAT-T-001",
+                "count": 1
+              }
+            }
+          ]
         },
         {
-          "stage": 2, "name": "퇴근은 없다", "cost": 0, "usage": "passive",
+          "stage": 2,
+          "name": "퇴근은 없다",
+          "cost": 0,
+          "usage": "passive",
           "text": "매 턴 시작, 내 유령 수만큼 OP.",
-          "effects": [{ "when": { "trigger": "turn_start" }, "what": "op_gain", "who": "self_owner", "params": { "amount": "ghost_count" } }]
+          "effects": [
+            {
+              "when": {
+                "trigger": "turn_start"
+              },
+              "what": "op_gain",
+              "who": "self_owner",
+              "params": {
+                "amount": "ghost_count"
+              }
+            }
+          ]
         }
       ]
     }
   },
   {
-    "id": "WCH-G-001", "deck": "WCH", "name": "마녀 다인시아", "epithet": "순수한 마력의 현신",
-    "character": "서다인", "nickname": "자칭 마녀", "deficit": "허세 → 자기파괴",
+    "id": "WCH-G-001",
+    "deck": "WCH",
+    "name": "마녀 다인시아",
+    "epithet": "순수한 마력의 현신",
+    "character": "서다인",
+    "nickname": "자칭 마녀",
+    "deficit": "허세 → 자기파괴",
     "archetype": "어그로·희생 (4단 승천)",
     "blurb": "성역의 신도를 죽는 순간 OP로 태운다. 신을 부르는 게 아니라, 스스로 신이 된다.",
     "playable": true,
-    "track": { "thresholds": [8, 10, 12, 14], "vessels": [3, 6, 9, 9] },
+    "track": {
+      "thresholds": [
+        8,
+        10,
+        12,
+        14
+      ],
+      "vessels": [
+        3,
+        6,
+        9,
+        9
+      ]
+    },
     "power": {
       "name": "검은 제물",
       "stages": [
         {
-          "stage": 0, "cost": 2, "usage": "once_total",
+          "stage": 0,
+          "cost": 2,
+          "usage": "once_total",
           "text": "내 성역 신도 하나 희생 → 봉헌력만큼 OP.",
-          "target": { "side": "ally", "zone": "sanct" },
+          "target": {
+            "side": "ally",
+            "zone": "sanct"
+          },
           "effects": [
-            { "when": "active", "what": "sacrifice", "who": "chosen" },
-            { "when": "active", "what": "op_gain", "who": "self_owner", "params": { "amount": "sac_offering" } }
+            {
+              "when": "active",
+              "what": "sacrifice",
+              "who": "chosen"
+            },
+            {
+              "when": "active",
+              "what": "op_gain",
+              "who": "self_owner",
+              "params": {
+                "amount": "sac_offering"
+              }
+            }
           ]
         },
         {
-          "stage": 1, "cost": 2, "usage": "per_turn",
+          "stage": 1,
+          "cost": 2,
+          "usage": "per_turn",
           "text": "매 턴, 내 성역 신도 하나 희생 → 봉헌력만큼 OP.",
-          "target": { "side": "ally", "zone": "sanct" },
+          "target": {
+            "side": "ally",
+            "zone": "sanct"
+          },
           "effects": [
-            { "when": "active", "what": "sacrifice", "who": "chosen" },
-            { "when": "active", "what": "op_gain", "who": "self_owner", "params": { "amount": "sac_offering" } }
+            {
+              "when": "active",
+              "what": "sacrifice",
+              "who": "chosen"
+            },
+            {
+              "when": "active",
+              "what": "op_gain",
+              "who": "self_owner",
+              "params": {
+                "amount": "sac_offering"
+              }
+            }
           ]
         },
         {
-          "stage": 2, "cost": 1, "usage": "per_turn",
+          "stage": 2,
+          "cost": 1,
+          "usage": "per_turn",
           "text": "매 턴, 내 성역 신도 하나 희생 → 봉헌력만큼 OP. (싸짐)",
-          "target": { "side": "ally", "zone": "sanct" },
+          "target": {
+            "side": "ally",
+            "zone": "sanct"
+          },
           "effects": [
-            { "when": "active", "what": "sacrifice", "who": "chosen" },
-            { "when": "active", "what": "op_gain", "who": "self_owner", "params": { "amount": "sac_offering" } }
+            {
+              "when": "active",
+              "what": "sacrifice",
+              "who": "chosen"
+            },
+            {
+              "when": "active",
+              "what": "op_gain",
+              "who": "self_owner",
+              "params": {
+                "amount": "sac_offering"
+              }
+            }
           ]
         },
         {
-          "stage": 3, "name": "승천", "cost": 1, "usage": "per_turn",
+          "stage": 3,
+          "name": "승천",
+          "cost": 1,
+          "usage": "per_turn",
           "text": "매 턴, 성역 신도 하나 희생 → 봉헌력만큼 OP. 적 성역 신도도 제물이 된다.",
-          "target": { "side": "any", "zone": "sanct" },
+          "target": {
+            "side": "any",
+            "zone": "sanct"
+          },
           "effects": [
-            { "when": "active", "what": "sacrifice", "who": "chosen" },
-            { "when": "active", "what": "op_gain", "who": "self_owner", "params": { "amount": "sac_offering" } }
+            {
+              "when": "active",
+              "what": "sacrifice",
+              "who": "chosen"
+            },
+            {
+              "when": "active",
+              "what": "op_gain",
+              "who": "self_owner",
+              "params": {
+                "amount": "sac_offering"
+              }
+            }
           ]
         }
       ]
     }
   },
   {
-    "id": "ETN-G-001", "deck": "ETN", "name": "영원의 신", "epithet": "영원히 멈춰버린 것들을 위하여,",
-    "character": "백지우", "nickname": "병실의 아이", "deficit": "상실의 공포",
-    "archetype": "축적 양극", "blurb": "아무것도 보내지 않는다. 되살려 판을 채우거나, 세 유품으로 시간을 멈춘다.",
-    "playable": false,
-    "track": { "thresholds": [12, 16, 20], "vessels": [3, 6, 9] },
-    "power": { "name": "아직 여기 있어", "stages": [] }
+    "id": "ETN-G-001",
+    "deck": "ETN",
+    "name": "영원의 신",
+    "epithet": "영원히 멈춰버린 것들을 위하여,",
+    "character": "백지우",
+    "nickname": "병실의 아이",
+    "deficit": "상실의 공포",
+    "archetype": "축적 양극",
+    "blurb": "아무것도 보내지 않는다. 되살려 판을 채우거나, 세 유품으로 시간을 멈춘다.",
+    "playable": true,
+    "track": {
+      "thresholds": [
+        12,
+        16,
+        20
+      ],
+      "vessels": [
+        3,
+        6,
+        9
+      ]
+    },
+    "power": {
+      "name": "아직 여기 있어",
+      "stages": [
+        {
+          "stage": 0,
+          "cost": 0,
+          "usage": "passive",
+          "text": "죽거나 소모된 카드는 사라지지 않고 병실 무덤에 쌓인다.",
+          "effects": []
+        },
+        {
+          "stage": 1,
+          "name": "아직 여기 있어",
+          "cost": 2,
+          "usage": "per_turn",
+          "text": "매 턴, 병실에서 신도 하나를 되살린다 — 목숨 1, 일그러진 채.",
+          "target": {
+            "side": "ward",
+            "type": "U"
+          },
+          "effects": [
+            {
+              "when": "active",
+              "what": "revive",
+              "who": "chosen"
+            }
+          ]
+        },
+        {
+          "stage": 2,
+          "cost": 1,
+          "usage": "per_turn",
+          "text": "매 턴, 병실에서 신도 하나를 온전하게 되살린다.",
+          "target": {
+            "side": "ward",
+            "type": "U"
+          },
+          "effects": [
+            {
+              "when": "active",
+              "what": "revive",
+              "who": "chosen",
+              "params": {
+                "intact": true
+              }
+            }
+          ]
+        }
+      ]
+    }
   },
   {
-    "id": "DSR-G-001", "deck": "DSR", "name": "욕망의 신", "epithet": "채워지지 않는 자",
-    "character": "이하니", "nickname": "애정결핍", "deficit": "관계중독",
-    "archetype": "의존 대상 시소", "blurb": "매달릴 곳을 고른다 — 내 최애에게 몰빵하거나, 상대에게 기생하거나.",
-    "playable": false,
-    "track": { "thresholds": [12, 16, 20], "vessels": [3, 6, 9] },
-    "power": { "name": "의존 대상 지정", "stages": [] }
+    "id": "DSR-G-001",
+    "deck": "DSR",
+    "name": "욕망의 신",
+    "epithet": "채워지지 않는 자",
+    "character": "이하니",
+    "nickname": "애정결핍",
+    "deficit": "관계중독",
+    "archetype": "의존 대상 시소",
+    "blurb": "매달릴 곳을 고른다 — 내 최애에게 몰빵하거나, 상대에게 기생하거나.",
+    "playable": true,
+    "track": {
+      "thresholds": [
+        12,
+        16,
+        20
+      ],
+      "vessels": [
+        3,
+        6,
+        9
+      ]
+    },
+    "power": {
+      "name": "의존 대상 지정",
+      "stages": [
+        {
+          "stage": 0,
+          "cost": 1,
+          "usage": "once_total",
+          "text": "신도 하나(내 편이든 상대든)를 의존 대상으로 지정한다.",
+          "target": {
+            "side": "any",
+            "ghost": false
+          },
+          "effects": [
+            {
+              "when": "active",
+              "what": "designate",
+              "who": "chosen"
+            }
+          ]
+        },
+        {
+          "stage": 1,
+          "cost": 1,
+          "usage": "per_turn",
+          "text": "매 턴 재지정. 의존 대상이 봉헌하면(어느 편이든) 나도 OP +1.",
+          "target": {
+            "side": "any",
+            "ghost": false
+          },
+          "effects": [
+            {
+              "when": "active",
+              "what": "designate",
+              "who": "chosen"
+            },
+            {
+              "when": "passive",
+              "what": "dependent_leech",
+              "who": "self_owner",
+              "params": {
+                "amount": 1
+              }
+            }
+          ]
+        },
+        {
+          "stage": 2,
+          "name": "너 없으면 안 돼",
+          "cost": 0,
+          "usage": "per_turn",
+          "text": "재지정 무료. 의존 대상이 봉헌하면 그 봉헌력만큼 나도 OP. 이별하면 OP +3.",
+          "target": {
+            "side": "any",
+            "ghost": false
+          },
+          "effects": [
+            {
+              "when": "active",
+              "what": "designate",
+              "who": "chosen"
+            },
+            {
+              "when": "passive",
+              "what": "dependent_leech",
+              "who": "self_owner",
+              "params": {
+                "amount": "dependent_offering"
+              }
+            },
+            {
+              "when": {
+                "trigger": "dependent_death"
+              },
+              "what": "op_gain",
+              "who": "self_owner",
+              "params": {
+                "amount": 3
+              }
+            }
+          ]
+        }
+      ]
+    }
   },
   {
-    "id": "VOI-G-001", "deck": "VOI", "name": "무위의 신", "epithet": "가장 조용한 혼돈",
-    "character": "김민수", "nickname": "무쓸모", "deficit": "무기력",
-    "archetype": "잠식·벽", "blurb": "아무것도 안 함으로써, 상대의 노력을 무의미하게 만든다.",
-    "playable": false,
-    "track": { "thresholds": [12, 16, 20], "vessels": [3, 6, 9] },
-    "power": { "name": "세상이 나를 중심으로 돌아야지", "stages": [] }
+    "id": "VOI-G-001",
+    "deck": "VOI",
+    "name": "무위의 신",
+    "epithet": "가장 조용한 혼돈",
+    "character": "김민수",
+    "nickname": "무쓸모",
+    "deficit": "무기력",
+    "archetype": "잠식·벽",
+    "blurb": "아무것도 안 함으로써, 상대의 노력을 무의미하게 만든다.",
+    "playable": true,
+    "track": {
+      "thresholds": [
+        12,
+        16,
+        20
+      ],
+      "vessels": [
+        3,
+        6,
+        9
+      ]
+    },
+    "power": {
+      "name": "가장 조용한 혼돈",
+      "stages": [
+        {
+          "stage": 0,
+          "cost": 0,
+          "usage": "passive",
+          "text": "습격으로 내 OP가 깎일 때 -1. (잘 안 닳는 벽)",
+          "effects": [
+            {
+              "when": "passive",
+              "what": "strike_reduce",
+              "who": "self_owner",
+              "params": {
+                "amount": 1
+              }
+            }
+          ]
+        },
+        {
+          "stage": 1,
+          "name": "세상이 나를 중심으로 돌아야지",
+          "cost": 0,
+          "usage": "passive",
+          "text": "상대가 카드를 낼 때마다 내 OP +1 (턴당 1회). 습격으로 깎이는 OP -1.",
+          "effects": [
+            {
+              "when": "passive",
+              "what": "strike_reduce",
+              "who": "self_owner",
+              "params": {
+                "amount": 1
+              }
+            },
+            {
+              "when": {
+                "trigger": "opponent_play"
+              },
+              "what": "op_gain",
+              "who": "self_owner",
+              "params": {
+                "amount": 1
+              },
+              "cond": {
+                "once_per_turn": true
+              }
+            }
+          ]
+        },
+        {
+          "stage": 2,
+          "name": "다 같이 무의미해지자",
+          "cost": 0,
+          "usage": "passive",
+          "text": "상대가 봉헌으로 얻는 OP -1. (이전 단계 효과 유지)",
+          "effects": [
+            {
+              "when": "passive",
+              "what": "strike_reduce",
+              "who": "self_owner",
+              "params": {
+                "amount": 1
+              }
+            },
+            {
+              "when": {
+                "trigger": "opponent_play"
+              },
+              "what": "op_gain",
+              "who": "self_owner",
+              "params": {
+                "amount": 1
+              },
+              "cond": {
+                "once_per_turn": true
+              }
+            },
+            {
+              "when": "passive",
+              "what": "offering_tax",
+              "who": "self_owner",
+              "params": {
+                "amount": 1
+              }
+            }
+          ]
+        }
+      ]
+    }
   }
 ]

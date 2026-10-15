@@ -1,0 +1,147 @@
+[
+  {
+    "id": "ETN-U-001", "name": "낡은 곰인형", "type": "U", "deck": "ETN", "cost": 1,
+    "life": 2, "offering": 0, "raid": 0, "role": "유품·저가 벽", "tags": ["유품"],
+    "text": "[유품] 병실에 안치되면 영원의 조각이 된다.",
+    "flavor": "한쪽 눈이 없다. 그래서 더 못 버린다."
+  },
+  {
+    "id": "ETN-U-002", "name": "멈춘 벽시계", "type": "U", "deck": "ETN", "cost": 2,
+    "life": 3, "offering": 0, "raid": 1, "role": "유품·벽", "tags": ["유품"],
+    "text": "[유품] 병실에 안치되면 영원의 조각이 된다.",
+    "flavor": "새벽 4시 12분. 그날부터 계속."
+  },
+  {
+    "id": "ETN-U-003", "name": "깨진 액자", "type": "U", "deck": "ETN", "cost": 3,
+    "life": 4, "offering": 0, "raid": 1, "role": "유품·벽", "tags": ["유품"],
+    "text": "[유품] 병실에 안치되면 영원의 조각이 된다.",
+    "flavor": "유리는 깨졌는데, 사진 속 사람들은 아직 웃는다."
+  },
+  {
+    "id": "ETN-U-004", "name": "산소호흡기", "type": "U", "deck": "ETN", "cost": 4,
+    "life": 5, "offering": 0, "raid": 0, "role": "거대 벽",
+    "text": "",
+    "flavor": "쉬익—. 이 소리가 멈추지 않는 한."
+  },
+  {
+    "id": "ETN-U-005", "name": "병실 친구", "type": "U", "deck": "ETN", "cost": 3,
+    "life": 3, "offering": 0, "raid": 1, "role": "축적 가속",
+    "text": "사망 시: 병실 2장 채움.",
+    "flavor": "옆 침대는 자주 비었다. 그래도 이름은 다 외웠다.",
+    "effects": [{ "when": { "trigger": "on_death" }, "what": "ward_fill", "who": "self_owner", "params": { "amount": 2 } }]
+  },
+  {
+    "id": "ETN-U-006", "name": "버리지 못한 교과서", "type": "U", "deck": "ETN", "cost": 2,
+    "life": 2, "offering": 1, "raid": 0, "role": "봉헌",
+    "text": "",
+    "flavor": "한 번도 못 간 학년의 교과서."
+  },
+  {
+    "id": "ETN-U-007", "name": "밤새 지킨 간병인", "type": "U", "deck": "ETN", "cost": 3,
+    "life": 3, "offering": 2, "raid": 0, "role": "주 봉헌 벽",
+    "text": "",
+    "flavor": "졸면서도 손은 놓지 않았다."
+  },
+  {
+    "id": "ETN-U-008", "name": "면회 온 가족", "type": "U", "deck": "ETN", "cost": 2,
+    "life": 2, "offering": 1, "raid": 1, "role": "봉헌",
+    "text": "",
+    "flavor": "면회 시간은 30분. 돌아서는 등은 매번 길었다."
+  },
+  {
+    "id": "ETN-U-009", "name": "오래된 인형들", "type": "U", "deck": "ETN", "cost": 4,
+    "life": 3, "offering": 0, "raid": 0, "role": "병실 참조",
+    "text": "습격력 = 병실 5장당 +1.",
+    "flavor": "줄 세워 두면 누가 누군지 다 기억난다.",
+    "effects": [{ "when": "passive", "what": "raid_buff", "who": "source_unit", "params": { "amount": "ward_per5" } }]
+  },
+  {
+    "id": "ETN-U-010", "name": "떠나보내지 못한 것", "type": "U", "deck": "ETN", "cost": 5,
+    "life": 4, "offering": 0, "raid": 1, "role": "병실 참조 벽",
+    "text": "목숨값 = 4 + 병실 5장당 +1.",
+    "flavor": "이름을 붙이면 보내야 할 것 같아서, 이름이 없다.",
+    "effects": [{ "when": "passive", "what": "life_buff", "who": "source_unit", "params": { "amount": "ward_per5" } }]
+  },
+  {
+    "id": "ETN-U-011", "name": "시간이 멈춘 아이", "type": "U", "deck": "ETN", "cost": 3,
+    "life": 3, "offering": 0, "raid": 1, "role": "각성",
+    "text": "",
+    "awaken": { "from": 1, "text": "병실 5장당 이 신도 목숨값 +1." },
+    "flavor": "키를 재는 벽의 눈금이, 몇 년째 같은 자리.",
+    "effects": [{ "when": "passive", "what": "life_buff", "who": "source_unit", "params": { "amount": "ward_per5" }, "from": 1 }]
+  },
+  {
+    "id": "ETN-U-012", "name": "꺼지지 않는 등", "type": "U", "deck": "ETN", "cost": 4,
+    "life": 4, "offering": 0, "raid": 1, "role": "각성",
+    "text": "",
+    "awaken": { "from": 2, "text": "매 턴 시작, 병실에서 신도 하나 추가 되살림." },
+    "flavor": "소등 시간이 지나도, 이 방만은.",
+    "effects": [{ "when": { "trigger": "turn_start" }, "what": "revive", "who": "ward_best", "params": { "intact": true }, "from": 2 }]
+  },
+  {
+    "id": "ETN-U-013", "name": "박제된 순간", "type": "U", "deck": "ETN", "cost": 2,
+    "life": 2, "offering": 1, "raid": 0, "role": "각성",
+    "text": "",
+    "awaken": { "from": 1, "text": "이 신도가 죽으면 병실 2장 채움." },
+    "flavor": "가장 좋았던 하루를, 유리관 속에.",
+    "effects": [{ "when": { "trigger": "on_death" }, "what": "ward_fill", "who": "self_owner", "params": { "amount": 2 }, "from": 1 }]
+  },
+  {
+    "id": "ETN-R-001", "name": "영원의 순간", "type": "R", "deck": "ETN", "cost": 3, "subtag": "콤보",
+    "text": "삼종 유품이 모두 병실에 안치돼 있으면 — 즉시 현재 강림 문턱만큼 OP. 유품은 안치된 채 남는다.",
+    "flavor": "세 조각이 맞물리자, 시간이 멎는다.",
+    "playCond": { "relics": true },
+    "effects": [{ "when": "active", "what": "op_gain", "who": "self_owner", "params": { "amount": "threshold" } }]
+  },
+  {
+    "id": "ETN-R-002", "name": "유품 정리", "type": "R", "deck": "ETN", "cost": 1, "subtag": "축적",
+    "text": "내 신도 하나를 소모해 병실에 넣고, 카드 1장 뽑는다.",
+    "flavor": "못 버려서, 대신 서랍에.",
+    "target": { "side": "ally", "ghost": false },
+    "effects": [
+      { "when": "active", "what": "sacrifice", "who": "chosen" },
+      { "when": "active", "what": "draw", "who": "self_owner", "params": { "count": 1 } }
+    ]
+  },
+  {
+    "id": "ETN-R-003", "name": "병문안", "type": "R", "deck": "ETN", "cost": 2, "subtag": "되살림",
+    "text": "병실에서 신도 하나를 되살린다 (온전히).",
+    "flavor": "아직 안 끝났어, 조금만 더.",
+    "target": { "side": "ward", "type": "U" },
+    "effects": [{ "when": "active", "what": "revive", "who": "chosen", "params": { "intact": true } }]
+  },
+  {
+    "id": "ETN-R-004", "name": "붙잡기", "type": "R", "deck": "ETN", "cost": 1, "subtag": "방어",
+    "text": "내 신도 하나, 이번 턴 목숨값 +2.",
+    "flavor": "놓지 않으려 두 손으로.",
+    "target": { "side": "ally" },
+    "effects": [{ "when": "active", "what": "life_buff", "who": "chosen", "params": { "amount": 2, "duration": "turn" } }]
+  },
+  {
+    "id": "ETN-R-005", "name": "함께 넘긴 앨범", "type": "R", "deck": "ETN", "cost": 2, "subtag": "봉헌",
+    "text": "내 일상 신도 전부, 이번 턴 봉헌력 +1.",
+    "flavor": "그날들이 잠깐 값이 된다.",
+    "effects": [{ "when": "active", "what": "offering_buff", "who": "all_my_day", "params": { "amount": 1, "duration": "turn" } }]
+  },
+  {
+    "id": "ETN-S-001", "name": "영원의 제단", "type": "S", "deck": "ETN", "cost": 3, "shrine_slot": "special",
+    "text": "봉헌으로는 OP를 얻지 못한다. 대신 삼종 유품이 안치된 동안 《영원의 순간》을 신앙심 없이 쓸 수 있다.",
+    "flavor": "여기 오르는 순간, 다른 길은 닫힌다.",
+    "effects": [
+      { "when": "passive", "what": "block_offering_op", "who": "self_owner" },
+      { "when": "passive", "what": "free_card", "who": "self_owner", "params": { "card": "ETN-R-001" }, "cond": { "relics": true } }
+    ]
+  },
+  {
+    "id": "ETN-S-002", "name": "병실", "type": "S", "deck": "ETN", "cost": 2, "shrine_slot": "sanct",
+    "text": "내 신도가 죽을 때 병실에 2장 쌓는다.",
+    "flavor": "떠나지 못한 것들의 방.",
+    "effects": [{ "when": { "trigger": "ally_death" }, "what": "ward_fill", "who": "self_owner", "params": { "amount": 1 } }]
+  },
+  {
+    "id": "ETN-S-003", "name": "멈춘 시계탑", "type": "S", "deck": "ETN", "cost": 3, "shrine_slot": "day",
+    "text": "병실 5장당 내 모든 신도 목숨값 +1.",
+    "flavor": "시간이 멎은 자리엔 아무것도 늙지 않는다.",
+    "effects": [{ "when": "passive", "what": "life_buff", "who": "my_units", "params": { "amount": "ward_per5" } }]
+  }
+]

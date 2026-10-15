@@ -20,6 +20,8 @@ const ICON: Record<string, string> = {
   win: '👑',
   draw: '＋',
   burn: '🔥',
+  revive: '↺',
+  bond: '💗',
   info: '·',
 };
 

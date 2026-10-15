@@ -1,13 +1,14 @@
 // 《월간 MY GOD》 규칙 엔진 — 시스템 기획서 §5(5페이즈)·§6(트랙)·§9(전투)·§10(죽음) + 카드 기획서 §9(effects)
 // 순수 로직. applyAction(state, action) → 새 state. UI·AI 모두 이 함수만 거친다.
 
-import { BALANCE, card, GOD_BY_ID, DECKS } from './db';
+import { ALL_CARDS, BALANCE, card, GOD_BY_ID, DECKS } from './db';
 import type {
   Amount,
   Effect,
   GameAction,
   GameEvent,
   GameState,
+  Mood,
   PlayerState,
   PowerStage,
   RaidTarget,
@@ -70,36 +71,120 @@ export function progress(p: PlayerState): number {
   return Math.min(1, (done + Math.min(p.op, th[p.stage])) / total);
 }
 
-// ───────────── 스탯 계산 (기본 + 지속 버프 + 성지 패시브 + 이번 턴) ─────────────
+// ── 영원: 병실 무덤 ──
+/** 삼종 유품 (태그 '유품') */
+export const RELIC_IDS = ALL_CARDS.filter((c) => c.tags?.includes('유품')).map((c) => c.id);
+/** 병실 무덤 매수 = 묘지(죽음·소모된 카드) + 덤 */
+export const wardCount = (p: PlayerState) => p.graveyard.length + p.wardBonus;
+export const relicsEnshrined = (p: PlayerState) => RELIC_IDS.length > 0 && RELIC_IDS.every((id) => p.graveyard.includes(id));
 
-function passiveMatches(who: string | undefined, u: Unit): boolean {
-  switch (who) {
+// ── 욕망: 의존 대상 ──
+export function dependentUnit(s: GameState, p: PlayerState): Unit | undefined {
+  return p.dependent !== null ? findUnit(s, p.dependent) : undefined;
+}
+/** 이하니의 얼굴: 대상 건재 방긋 → 상처 울먹 → 잃으면 오열 */
+export function mood(s: GameState, p: PlayerState): Mood {
+  const d = dependentUnit(s, p);
+  if (d) return d.dmg > 0 ? '울먹' : '방긋';
+  return p.heartbroken ? '오열' : 'none';
+}
+
+export function refEquals(a: TargetRef, b: TargetRef): boolean {
+  if (a.kind === 'unit' && b.kind === 'unit') return a.uid === b.uid;
+  if (a.kind === 'hand' && b.kind === 'hand') return a.index === b.index;
+  if (a.kind === 'ward' && b.kind === 'ward') return a.index === b.index;
+  return false;
+}
+
+// ───────────── 지속 효과 (성지·신도·권능의 패시브) ─────────────
+
+interface PassiveSrc {
+  e: Effect;
+  seat: Seat; // 효과 주인
+  uid?: number; // 효과를 품은 신도
+}
+
+/** 한 플레이어 진영의 지속 효과 전부 — 신 권능(현재 단계) · 성지 · 필드 신도 */
+function passiveSources(s: GameState, seat: Seat): PassiveSrc[] {
+  const p = s.players[seat];
+  const out: PassiveSrc[] = [];
+  for (const e of currentPowerStage(p)?.effects ?? []) if (e.when === 'passive') out.push({ e, seat });
+  for (const sh of p.shrines) for (const e of card(sh.cardId).effects ?? []) if (e.when === 'passive') out.push({ e, seat });
+  for (const u of allUnits(p)) for (const e of card(u.cardId).effects ?? []) if (e.when === 'passive') out.push({ e, seat, uid: u.uid });
+  return out;
+}
+
+/** 조건 검사 — 각성(from)·유령 수·얼굴·의존·유품·위치 */
+function condOk(s: GameState, e: Effect, seat: Seat, uid?: number): boolean {
+  const p = s.players[seat];
+  if (e.from !== undefined && p.stage < e.from) return false;
+  const c = e.cond;
+  if (!c) return true;
+  if (c.min_ghosts !== undefined && ghostCount(p) < c.min_ghosts) return false;
+  if (c.mood !== undefined && mood(s, p) !== c.mood) return false;
+  if (c.is_dependent && (uid === undefined || p.dependent !== uid)) return false;
+  if (c.dependent_mine || c.dependent_enemy) {
+    const d = dependentUnit(s, p);
+    if (!d) return false;
+    if (c.dependent_mine && d.owner !== seat) return false;
+    if (c.dependent_enemy && d.owner === seat) return false;
+  }
+  if (c.relics && !relicsEnshrined(p)) return false;
+  if (c.self_zone !== undefined) {
+    const u = uid !== undefined ? findUnit(s, uid) : undefined;
+    if (!u || u.zone !== c.self_zone) return false;
+  }
+  return true;
+}
+
+/** 지속 효과의 대상 판정 — 선택자는 효과 주인 기준 */
+function passiveHits(s: GameState, src: PassiveSrc, u: Unit): boolean {
+  const mine = u.owner === src.seat;
+  switch (src.e.who) {
     case 'my_units':
-      return true;
+      return mine;
     case 'my_ghosts':
-      return isGhost(u);
+      return mine && isGhost(u);
     case 'my_day_ghosts':
-      return isGhost(u) && u.zone === 'day';
+      return mine && isGhost(u) && u.zone === 'day';
     case 'all_my_day':
-      return u.zone === 'day';
+      return mine && u.zone === 'day';
     case 'all_my_sanct':
-      return u.zone === 'sanct';
+      return mine && u.zone === 'sanct';
+    case 'source_unit':
+      return src.uid === u.uid;
+    case 'dependent':
+      return s.players[src.seat].dependent === u.uid;
+    case 'enemy_units':
+      return !mine;
+    case 'enemy_day':
+      return !mine && u.zone === 'day';
+    case 'enemy_sanct':
+      return !mine && u.zone === 'sanct';
     default:
       return false;
   }
 }
 
 function passiveBonus(s: GameState, u: Unit, verb: 'offering_buff' | 'raid_buff' | 'life_buff'): number {
-  const p = s.players[u.owner];
   let bonus = 0;
-  for (const sh of p.shrines) {
-    for (const e of card(sh.cardId).effects ?? []) {
-      if (e.when === 'passive' && e.what === verb && passiveMatches(e.who, u)) {
-        bonus += typeof e.params?.amount === 'number' ? e.params.amount : 0;
-      }
+  for (const seat of [0, 1] as const) {
+    for (const src of passiveSources(s, seat)) {
+      if (src.e.what !== verb || !passiveHits(s, src, u) || !condOk(s, src.e, src.seat, src.uid)) continue;
+      bonus += resolveAmount(s, src.e.params?.amount, { seat: src.seat, sourceUid: src.uid, depth: 0 });
     }
   }
   return bonus;
+}
+
+/** 플레이어 단위 지속 효과 합 (슬롯·봉쇄·세금·직격 감소·흡착…) */
+export function sumPassive(s: GameState, seat: Seat, verb: Effect['what']): number {
+  let n = 0;
+  for (const src of passiveSources(s, seat)) {
+    if (src.e.what !== verb || !condOk(s, src.e, src.seat, src.uid)) continue;
+    n += src.e.params?.amount === undefined ? 1 : resolveAmount(s, src.e.params.amount, { seat, sourceUid: src.uid, depth: 0 });
+  }
+  return n;
 }
 
 export function effOffering(s: GameState, u: Unit): number {
@@ -127,18 +212,28 @@ export function daySlots(p: PlayerState): number {
 }
 export const sanctSlots = (_p: PlayerState) => BALANCE.sanctSlots;
 
+/** 실제 신앙심 비용 — 《영원의 제단》처럼 공짜로 만드는 지속 효과 반영 */
+export function effectiveCost(s: GameState, seat: Seat, cardId: string): number {
+  for (const src of passiveSources(s, seat)) {
+    if (src.e.what === 'free_card' && src.e.params?.card === cardId && condOk(s, src.e, seat, src.uid)) return 0;
+  }
+  return card(cardId).cost;
+}
+
 /** 사망 시 효과 요약 — 표시·AI 평가용 */
-export function deathSummary(s: GameState, u: Unit): { ghosts: number; op: number } {
+export function deathSummary(s: GameState, u: Unit): { ghosts: number; op: number; ward: number } {
   const p = s.players[u.owner];
   let ghosts = 0;
   let op = 0;
+  let ward = 0;
   for (const e of [...(card(u.cardId).effects ?? []), ...u.granted]) {
     if (typeof e.when !== 'object' || e.when.trigger !== 'on_death') continue;
     if (e.from !== undefined && p.stage < e.from) continue;
     if (e.what === 'summon_token') ghosts += e.params?.count ?? 1;
     if (e.what === 'op_gain' && typeof e.params?.amount === 'number') op += e.params.amount;
+    if (e.what === 'ward_fill' && typeof e.params?.amount === 'number') ward += e.params.amount;
   }
-  return { ghosts, op };
+  return { ghosts, op, ward };
 }
 
 // ───────────── 로그 ─────────────
@@ -198,6 +293,11 @@ export function createMatch(opts: MatchOptions): GameState {
       powerUsedThisTurn: false,
       powerUsedLatent: 0,
       turnsTaken: 0,
+      wardBonus: 0,
+      dependent: null,
+      heartbroken: false,
+      locked: false,
+      onceFlags: [],
     };
   };
   const s: GameState = {
@@ -255,6 +355,7 @@ interface Ctx {
   chosen?: TargetRef;
   sacOffering?: number;
   byPower?: boolean;
+  tag?: string; // 턴당 1회 효과 식별용
   depth: number;
 }
 
@@ -271,11 +372,26 @@ function resolveAmount(s: GameState, a: Amount | undefined, ctx: Ctx): number {
       const u = ctx.sourceUid !== undefined ? findUnit(s, ctx.sourceUid) : undefined;
       return u ? effOffering(s, u) : 0;
     }
+    case 'ward_count':
+      return wardCount(p);
+    case 'ward_per5':
+      return Math.floor(wardCount(p) / 5);
+    case 'threshold':
+      return threshold(p);
+    case 'dependent_offering': {
+      const d = dependentUnit(s, p);
+      return d ? effOffering(s, d) : 0;
+    }
+    case 'dependent_raid': {
+      const d = dependentUnit(s, p);
+      return d ? effRaid(s, d) : 0;
+    }
   }
 }
 
 function selectUnits(s: GameState, e: Effect, ctx: Ctx): Unit[] {
   const p = s.players[ctx.seat];
+  const opp = s.players[other(ctx.seat)];
   switch (e.who) {
     case 'source_unit': {
       const u = ctx.sourceUid !== undefined ? findUnit(s, ctx.sourceUid) : undefined;
@@ -285,6 +401,10 @@ function selectUnits(s: GameState, e: Effect, ctx: Ctx): Unit[] {
       if (ctx.chosen?.kind !== 'unit') return [];
       const u = findUnit(s, ctx.chosen.uid);
       return u ? [u] : [];
+    }
+    case 'dependent': {
+      const d = dependentUnit(s, p);
+      return d ? [d] : [];
     }
     case 'all_my_day':
       return [...p.day];
@@ -296,8 +416,13 @@ function selectUnits(s: GameState, e: Effect, ctx: Ctx): Unit[] {
       return allUnits(p).filter(isGhost);
     case 'my_day_ghosts':
       return p.day.filter(isGhost);
+    case 'enemy_units':
+      return allUnits(opp);
+    case 'enemy_day':
+      return [...opp.day];
+    case 'enemy_sanct':
+      return [...opp.sanct];
     case 'enemy_sanct_weakest': {
-      const opp = s.players[other(ctx.seat)];
       if (opp.sanct.length === 0) return [];
       const sorted = [...opp.sanct].sort((a, b) => remainingLife(s, a) - remainingLife(s, b) || a.uid - b.uid);
       return [sorted[0]];
@@ -309,16 +434,22 @@ function selectUnits(s: GameState, e: Effect, ctx: Ctx): Unit[] {
 
 function runEffects(s: GameState, effects: Effect[], ctx: Ctx) {
   for (const e of effects) {
-    if (s.winner !== null && s.phase === 'over') return;
+    if (s.phase === 'over') return;
     runEffect(s, e, ctx);
   }
 }
 
 function runEffect(s: GameState, e: Effect, ctx: Ctx) {
   if (ctx.depth > 12) return; // 연쇄 폭주 방지
-  const p = s.players[ctx.seat];
-  if (e.from !== undefined && p.stage < e.from) return;
-  if (e.cond?.min_ghosts !== undefined && ghostCount(p) < e.cond.min_ghosts) return;
+  if (!condOk(s, e, ctx.seat, ctx.sourceUid)) return;
+  if (e.cond?.once_per_turn) {
+    const p0 = s.players[ctx.seat];
+    const key = `${ctx.tag ?? 'x'}:${e.what}`;
+    if (p0.onceFlags.includes(key)) return;
+    p0.onceFlags.push(key);
+  }
+  // 플레이어 단위 동사의 대상: 기본은 나, who:'opponent'면 상대
+  const p = s.players[e.who === 'opponent' ? other(ctx.seat) : ctx.seat];
   const amt = resolveAmount(s, e.params?.amount, ctx);
 
   switch (e.what) {
@@ -444,9 +575,91 @@ function runEffect(s: GameState, e: Effect, ctx: Ctx) {
       log(s, opp.seat, 'track', `트랙 직격 OP -${before - opp.op}`, { amount: -(before - opp.op) });
       return;
     }
+
+    // ── 영원 ──
+    case 'ward_fill': {
+      if (amt <= 0) return;
+      p.wardBonus += amt;
+      log(s, p.seat, 'info', `병실에 ${amt}장 더 쌓였다 (병실 ${wardCount(p)})`);
+      return;
+    }
+    case 'revive': {
+      if (p.day.length >= daySlots(p)) return;
+      let idx = -1;
+      if (e.who === 'ward_best') {
+        p.graveyard.forEach((id, i) => {
+          if (card(id).type !== 'U' || RELIC_IDS.includes(id)) return;
+          if (idx < 0 || card(id).cost > card(p.graveyard[idx]).cost) idx = i;
+        });
+      } else if (ctx.chosen?.kind === 'ward') idx = ctx.chosen.index;
+      const id = idx >= 0 ? p.graveyard[idx] : undefined;
+      if (!id || card(id).type !== 'U') return;
+      p.graveyard.splice(idx, 1);
+      const u = newUnit(s, p.seat, id, 'day', s.turn, true);
+      if (!e.params?.intact) {
+        u.perm.life = 1 - (card(id).life ?? 1);
+        u.twisted = true;
+      }
+      p.day.push(u);
+      log(s, p.seat, 'revive', `《${card(id).name}》 되살림${u.twisted ? ' — 일그러진 채' : ''}`, { uid: u.uid });
+      return;
+    }
+
+    // ── 욕망 ──
+    case 'designate': {
+      for (const u of selectUnits(s, e, ctx)) setDependent(s, p, u);
+      return;
+    }
+    case 'copy_stats': {
+      const d = dependentUnit(s, p);
+      if (!d) return;
+      for (const u of selectUnits(s, e, ctx)) {
+        if (u.uid === d.uid) continue;
+        u.perm.offering += effOffering(s, d) - effOffering(s, u);
+        u.perm.raid += effRaid(s, d) - effRaid(s, u);
+        log(s, p.seat, 'info', `《${card(u.cardId).name}》이 《${card(d.cardId).name}》을 닮아 간다`, { uid: u.uid });
+      }
+      return;
+    }
+    case 'steal': {
+      for (const u of selectUnits(s, e, ctx)) {
+        if (u.owner === p.seat || p.day.length >= daySlots(p)) continue;
+        const from = s.players[u.owner];
+        removeUnit(from, u);
+        if (from.dependent === u.uid) from.dependent = null;
+        u.owner = p.seat;
+        u.zone = 'day';
+        u.enteredTurn = s.turn;
+        u.moved = true;
+        p.day.push(u);
+        log(s, p.seat, 'bond', `《${card(u.cardId).name}》을 애인이라 속여 데려왔다`, { uid: u.uid });
+        setDependent(s, p, u);
+      }
+      return;
+    }
+
+    // ── 무위 ──
+    case 'lock_plays': {
+      p.locked = true;
+      log(s, p.seat, 'info', `아무것도 안 하기로 했다`);
+      return;
+    }
+
+    // 지속 효과 — 각 계산 지점에서 읽는다
     case 'slot_buff':
-      return; // 패시브 — daySlots()가 계산
+    case 'block_offering_op':
+    case 'free_card':
+    case 'dependent_leech':
+    case 'strike_reduce':
+    case 'offering_tax':
+      return;
   }
+}
+
+function setDependent(s: GameState, p: PlayerState, u: Unit) {
+  p.dependent = u.uid;
+  p.heartbroken = false;
+  log(s, p.seat, 'bond', `💗 의존 대상 — 《${card(u.cardId).name}》${u.owner === p.seat ? '' : ' (상대 신도)'}`, { uid: u.uid });
 }
 
 /** 효과 주인(신도) 자신의 트리거 */
@@ -457,7 +670,7 @@ function fireSelf(s: GameState, u: Unit, trigger: TriggerName, extra: Partial<Ct
   if (effects.length) runEffects(s, effects, { seat: u.owner, sourceUid: u.uid, depth, ...extra });
 }
 
-/** 한 플레이어 진영 전체의 트리거 — 순서: 신 권능(지속) → 성지(설치순) → 필드 신도(uid순) */
+/** 한 플레이어 진영 전체의 트리거 — 순서: 신 권능 → 성지(설치순) → 필드 신도(uid순) */
 function fireSide(
   s: GameState,
   seat: Seat,
@@ -473,28 +686,32 @@ function fireSide(
     return true;
   };
   const ps = currentPowerStage(p);
-  if (ps?.usage === 'passive') {
+  if (ps) {
     const eff = ps.effects.filter(matches);
     if (eff.length) {
-      if (trigger === 'turn_start' && eff.some((e) => e.what === 'op_gain')) {
-        log(s, seat, 'power', `「${ps.name ?? god(p).power.name}」`);
-      }
-      runEffects(s, eff, { seat, depth });
+      const live = eff.some((e) => condOk(s, e, seat) && !(e.cond?.once_per_turn && p.onceFlags.includes(`power:${e.what}`)));
+      if (live) log(s, seat, 'power', `「${ps.name ?? god(p).power.name}」`);
+      runEffects(s, eff, { seat, depth, tag: 'power' });
     }
   }
   for (const sh of [...p.shrines]) {
     const eff = (card(sh.cardId).effects ?? []).filter(matches);
-    if (eff.length) runEffects(s, eff, { seat, depth });
+    if (eff.length) runEffects(s, eff, { seat, depth, tag: `shrine:${sh.cardId}` });
   }
   for (const u of [...allUnits(p)].sort((a, b) => a.uid - b.uid)) {
     const eff = [...(card(u.cardId).effects ?? []), ...u.granted].filter(matches);
-    if (eff.length) runEffects(s, eff, { seat, sourceUid: u.uid, depth });
+    if (eff.length) runEffects(s, eff, { seat, sourceUid: u.uid, depth, tag: `unit:${u.uid}` });
   }
 }
 
 function removeUnit(p: PlayerState, u: Unit) {
   p.day = p.day.filter((x) => x.uid !== u.uid);
   p.sanct = p.sanct.filter((x) => x.uid !== u.uid);
+}
+
+/** 습격으로 깎이는 OP — 무위의 「잘 안 닳는 벽」 반영 */
+function raidLoss(s: GameState, seat: Seat, amount: number): number {
+  return Math.max(0, amount - sumPassive(s, seat, 'strike_reduce'));
 }
 
 /** 사망 처리 — 시스템 §9·§10, 카드 기획서 §9-1 순서. 반환: 사망 직전 봉헌력 */
@@ -517,7 +734,7 @@ function killUnit(
   // 1. 처형 손실 (유령은 이미 죽은 자 — 손실 없음)
   if (cause === 'execution' && !c.ghost && off > 0) {
     const before = owner.op;
-    owner.op = Math.max(0, owner.op - off);
+    owner.op = Math.max(0, owner.op - raidLoss(s, owner.seat, off));
     if (before !== owner.op) log(s, u.owner, 'op', `무의미한 죽음 — OP -${before - owner.op}`, { amount: -(before - owner.op) });
   }
   // 2. 희생 트리거
@@ -528,9 +745,18 @@ function killUnit(
   }
   // 3. 죽은 신도 자신의 「사망 시」 (유령은 트리거를 낳지 않는다)
   if (!c.ghost) fireSelf(s, u, 'on_death', {}, depth);
-  // 4. 소유자 진영 반응 (성지·다른 신도)
+  // 4. 소유자 진영 반응 (성지·다른 신도) → 상대 진영 반응
   fireSide(s, u.owner, 'ally_death', { deadZone: zoneWas, deadGhost: !!c.ghost }, depth);
+  fireSide(s, other(u.owner), 'enemy_death', { deadZone: zoneWas, deadGhost: !!c.ghost }, depth);
   if (!c.ghost) owner.graveyard.push(u.cardId);
+  // 5. 「이별」 — 이 신도에게 매달리던 사람이 있다면
+  for (const q of s.players) {
+    if (q.dependent !== u.uid) continue;
+    q.dependent = null;
+    q.heartbroken = true;
+    log(s, q.seat, 'bond', `💔 이별 — 《${c.name}》을 잃었다`);
+    fireSide(s, q.seat, 'dependent_death', {}, depth);
+  }
   return off;
 }
 
@@ -551,6 +777,8 @@ function startTurn(s: GameState) {
   const bonus = p.seat !== s.first && p.turnsTaken === 1 ? BALANCE.secondPlayerFaithBonus : 0;
   p.faith = vessel(p) + bonus;
   p.powerUsedThisTurn = false;
+  p.locked = false;
+  for (const q of s.players) q.onceFlags = [];
   for (const u of allUnits(p)) {
     u.moved = false;
     u.raided = false;
@@ -562,15 +790,37 @@ function startTurn(s: GameState) {
 
 function endTurnInternal(s: GameState) {
   const p = s.players[s.active];
+  const opp = s.players[other(p.seat)];
   // 흑염룡 각성 등 — 턴 끝 소멸
   for (const u of allUnits(p).filter((x) => x.doomed)) killUnit(s, u, 'sacrifice', { seat: p.seat, byPower: false }, 0);
 
   // ⑤ 종료 페이즈: 봉헌 정산 → 강림 판정 1회
-  const settled = p.day.reduce((sum, u) => sum + effOffering(s, u), 0);
+  let settled = p.day.reduce((sum, u) => sum + effOffering(s, u), 0);
+  if (settled > 0 && sumPassive(s, p.seat, 'block_offering_op') > 0) {
+    log(s, p.seat, 'info', `제단 위에선 봉헌이 OP가 되지 않는다`);
+    settled = 0;
+  }
+  const tax = sumPassive(s, opp.seat, 'offering_tax');
+  if (settled > 0 && tax > 0) {
+    const cut = Math.min(settled, tax);
+    settled -= cut;
+    log(s, opp.seat, 'power', `「다 같이 무의미해지자」 — 상대 봉헌 -${cut}`);
+  }
   if (settled > 0) {
     p.op += settled;
     log(s, p.seat, 'op', `봉헌 정산 OP +${settled}`, { amount: settled });
   }
+  // 욕망: 의존 대상이 이번에 봉헌했다면, 매달린 사람도 OP
+  for (const q of s.players) {
+    const d = dependentUnit(s, q);
+    if (!d || d.owner !== p.seat || d.zone !== 'day' || effOffering(s, d) <= 0) continue;
+    const gain = sumPassive(s, q.seat, 'dependent_leech');
+    if (gain > 0) {
+      q.op += gain;
+      log(s, q.seat, 'op', `곁에서 봉헌 — 《${card(d.cardId).name}》 덕에 OP +${gain}`, { amount: gain });
+    }
+  }
+
   const th = threshold(p);
   if (p.op >= th) {
     if (p.stage >= maxStage(p)) {
@@ -618,6 +868,13 @@ export function legalTargets(s: GameState, seat: Seat, spec: TargetSpec, exclude
       .filter(({ id, index }) => index !== excludeHand && (!spec.type || card(id).type === spec.type))
       .map(({ index }) => ({ kind: 'hand' as const, index }));
   }
+  if (spec.side === 'ward') {
+    if (p.day.length >= daySlots(p)) return [];
+    return p.graveyard
+      .map((id, index) => ({ id, index }))
+      .filter(({ id }) => !spec.type || card(id).type === spec.type)
+      .map(({ index }) => ({ kind: 'ward' as const, index }));
+  }
   const units = [...allUnits(s.players[0]), ...allUnits(s.players[1])];
   return units.filter((u) => unitMatches(s, seat, spec, u)).map((u) => ({ kind: 'unit' as const, uid: u.uid }));
 }
@@ -632,12 +889,18 @@ export function whyCantPlay(s: GameState, handIndex: number): Why {
   const p = s.players[s.active];
   if (s.phase !== 'prep') return '준비 페이즈에만 낼 수 있다';
   if (s.pending) return '먼저 선택을 마쳐야 한다';
+  if (p.locked) return '아무것도 안 하기로 했다';
   const id = p.hand[handIndex];
   if (!id) return '카드가 없다';
   const c = card(id);
-  if (c.cost > p.faith) return `신앙심 부족 (${c.cost} 필요)`;
+  const cost = effectiveCost(s, p.seat, id);
+  if (cost > p.faith) return `신앙심 부족 (${cost} 필요)`;
   if (c.type === 'U' && p.day.length >= daySlots(p)) return '일상 자리가 없다';
   if (c.type === 'S' && !canPlaceShrine(p, c.shrine_slot ?? 'day')) return '성지 자리가 없다 (동시 2개, 같은 종류 1개)';
+  if (c.playCond?.relics && !relicsEnshrined(p)) return '삼종 유품이 아직 병실에 없다';
+  if (c.playCond?.day_slot && p.day.length >= daySlots(p)) return '내 일상 자리가 없다';
+  if (c.playCond?.dependent && !dependentUnit(s, p)) return '의존 대상이 없다';
+  if (c.playCond?.dependent_mine && dependentUnit(s, p)?.owner !== p.seat) return '의존 대상이 내 신도가 아니다';
   if (c.target && legalTargets(s, p.seat, c.target, handIndex).length === 0) return '고를 대상이 없다';
   return null;
 }
@@ -711,18 +974,17 @@ export function applyAction(prev: GameState, action: GameAction): ApplyResult {
       if (why) return { state: prev, error: why };
       const id = p.hand[action.handIndex];
       const c = card(id);
+      const cost = effectiveCost(s, p.seat, id);
       let target = action.target;
       if (c.target) {
         if (!target) return { state: prev, error: '대상을 골라야 한다' };
-        const ok = legalTargets(s, p.seat, c.target, action.handIndex).some((t) =>
-          t.kind === 'unit' && target!.kind === 'unit' ? t.uid === target!.uid : t.kind === 'hand' && target!.kind === 'hand' && t.index === target!.index,
-        );
-        if (!ok) return { state: prev, error: '그 대상은 고를 수 없다' };
+        const t0 = target;
+        if (!legalTargets(s, p.seat, c.target, action.handIndex).some((t) => refEquals(t, t0))) return { state: prev, error: '그 대상은 고를 수 없다' };
       }
       p.hand.splice(action.handIndex, 1);
       // 손패 대상 인덱스 보정 (낸 카드가 빠졌으므로)
       if (target?.kind === 'hand' && target.index > action.handIndex) target = { kind: 'hand', index: target.index - 1 };
-      p.faith -= c.cost;
+      p.faith -= cost;
 
       if (c.type === 'U') {
         const u = newUnit(s, p.seat, id, 'day', s.turn, true);
@@ -733,9 +995,11 @@ export function applyAction(prev: GameState, action: GameAction): ApplyResult {
         log(s, p.seat, 'play', `성지 《${c.name}》 설치`);
       } else {
         log(s, p.seat, 'play', `의식 《${c.name}》`);
-        p.graveyard.push(id);
         runEffects(s, c.effects ?? [], { seat: p.seat, chosen: target, depth: 0 });
+        p.graveyard.push(id); // 소모된 의식은 효과가 끝난 뒤 묘지(병실)로
       }
+      // 무위: 상대가 카드를 낼 때마다
+      if (s.phase !== 'over') fireSide(s, other(p.seat), 'opponent_play', {}, 0);
       return { state: s };
     }
 
@@ -757,15 +1021,18 @@ export function applyAction(prev: GameState, action: GameAction): ApplyResult {
       const st = currentPowerStage(p)!;
       if (st.target) {
         const t = action.target;
-        if (!t || t.kind !== 'unit') return { state: prev, error: '대상을 골라야 한다' };
-        if (!legalTargets(s, p.seat, st.target).some((x) => x.kind === 'unit' && x.uid === t.uid))
-          return { state: prev, error: '그 대상은 고를 수 없다' };
+        if (!t) return { state: prev, error: '대상을 골라야 한다' };
+        if (!legalTargets(s, p.seat, st.target).some((x) => refEquals(x, t))) return { state: prev, error: '그 대상은 고를 수 없다' };
       }
       p.faith -= st.cost;
       p.powerUsedThisTurn = true;
       if (st.usage === 'once_total') p.powerUsedLatent++;
       log(s, p.seat, 'power', `권능 「${god(p).power.name}」 (${stageName(p.stage)})`);
-      runEffects(s, st.effects, { seat: p.seat, chosen: action.target, byPower: true, depth: 0 });
+      runEffects(
+        s,
+        st.effects.filter((e) => e.when === 'active'),
+        { seat: p.seat, chosen: action.target, byPower: true, depth: 0 },
+      );
       return { state: s };
     }
 
@@ -788,7 +1055,7 @@ export function applyAction(prev: GameState, action: GameAction): ApplyResult {
       atk.raided = true;
       if (action.target.kind === 'track') {
         const before = opp.op;
-        opp.op = Math.max(0, opp.op - power);
+        opp.op = Math.max(0, opp.op - raidLoss(s, opp.seat, power));
         log(s, p.seat, 'raid', `《${card(atk.cardId).name}》 트랙 직격!`, { uid: atk.uid });
         log(s, opp.seat, 'track', `트랙 직격 OP -${before - opp.op}`, { amount: -(before - opp.op) });
         return { state: s };

@@ -9,6 +9,8 @@ interface Props {
   cardId: string;
   /** 소유자의 현재 강림 단계 — 각성 텍스트 활성 표시용 */
   stage?: number;
+  /** 실제 비용이 카드 비용과 다를 때 (예: 《영원의 제단》으로 공짜) */
+  cost?: number;
   disabled?: boolean;
   selected?: boolean;
   targetable?: boolean;
@@ -18,7 +20,7 @@ interface Props {
   onClick?: () => void;
 }
 
-export function CardFace({ cardId, stage = 0, disabled, selected, targetable, reason, size = 'hand', showFlavor, onClick }: Props) {
+export function CardFace({ cardId, stage = 0, cost, disabled, selected, targetable, reason, size = 'hand', showFlavor, onClick }: Props) {
   const c = card(cardId);
   const isUnit = c.type === 'U' || c.type === 'T';
   const awakened = c.awaken ? stage >= c.awaken.from : false;
@@ -37,13 +39,18 @@ export function CardFace({ cardId, stage = 0, disabled, selected, targetable, re
   return (
     <button type="button" className={cls} data-god={c.deck} onClick={onClick} title={reason ?? undefined} disabled={!onClick}>
       <div className="card-face__head">
-        <span className="card-face__cost" aria-label={`비용 ${c.cost}`}>
-          {c.cost}
+        <span className={`card-face__cost${cost !== undefined && cost !== c.cost ? ' is-changed' : ''}`} aria-label={`비용 ${cost ?? c.cost}`}>
+          {cost ?? c.cost}
         </span>
         <span className="card-face__name">{c.name}</span>
       </div>
       <div className="card-face__art">
         <CardArt cardId={cardId} />
+        {c.draft && (
+          <span className="card-face__draft" title="기획서에 정확값이 없어 웹판에서 임시로 채운 카드">
+            임시
+          </span>
+        )}
       </div>
       <div className="card-face__type">
         {TYPE_LABEL[c.type]}

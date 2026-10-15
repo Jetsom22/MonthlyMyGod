@@ -53,12 +53,14 @@
   --g-NEU-point: #ffcf5c;
   --g-NEU-erosion: #8a6420;
   --g-NEU-soft: #f6e3b4;
+  --g-NEU-on-point: #2b2112; /* 포인트 색 위 글자 */
 
   /* ── 인내의 신 · 한영일 (PAT) — 형광등 청백 + 탁한 회청 ── */
   --g-PAT-main: #9aa6ad;
   --g-PAT-point: #3f6fa0;
   --g-PAT-erosion: #b8d4dc;
   --g-PAT-soft: #dde6ea;
+  --g-PAT-on-point: #ffffff; /* 포인트 색 위 글자 */
   --g-PAT-hair: #7a7e86;
   --g-PAT-skin: #e6d2c4;
 
@@ -67,6 +69,7 @@
   --g-WCH-point: #a45ce0;
   --g-WCH-erosion: #5a2f8a;
   --g-WCH-soft: #e7dcf4;
+  --g-WCH-on-point: #ffffff; /* 포인트 색 위 글자 */
   --g-WCH-hair: #ece7f4;
   --g-WCH-skin: #f0dccf;
 
@@ -75,6 +78,7 @@
   --g-ETN-point: #e8d98f;
   --g-ETN-erosion: #8a6f4a;
   --g-ETN-soft: #f1ead8;
+  --g-ETN-on-point: #3a2f1e; /* 포인트 색 위 글자 */
   --g-ETN-hair: #d8c7a0;
   --g-ETN-skin: #ecdccb;
 
@@ -83,6 +87,7 @@
   --g-DSR-point: #ff5fa0;
   --g-DSR-erosion: #d95f9e;
   --g-DSR-soft: #ffe0ec;
+  --g-DSR-on-point: #ffffff; /* 포인트 색 위 글자 */
   --g-DSR-hair: #d98cae;
   --g-DSR-skin: #f4dccf;
 
@@ -91,6 +96,7 @@
   --g-VOI-point: #aeb8ae;
   --g-VOI-erosion: #666e60;
   --g-VOI-soft: #d9ddd4;
+  --g-VOI-on-point: #22261f; /* 포인트 색 위 글자 */
   --g-VOI-hair: #5a6058;
   --g-VOI-skin: #cdd2c4;
 
@@ -130,12 +136,12 @@
 }
 
 /* 신 테마 바인딩 — data-god 를 단 요소 아래에선 --god-* 로 그 신의 색을 쓴다 */
-[data-god='NEU'] { --god-main: var(--g-NEU-main); --god-point: var(--g-NEU-point); --god-erosion: var(--g-NEU-erosion); --god-soft: var(--g-NEU-soft); }
-[data-god='PAT'] { --god-main: var(--g-PAT-main); --god-point: var(--g-PAT-point); --god-erosion: var(--g-PAT-erosion); --god-soft: var(--g-PAT-soft); --god-hair: var(--g-PAT-hair); --god-skin: var(--g-PAT-skin); }
-[data-god='WCH'] { --god-main: var(--g-WCH-main); --god-point: var(--g-WCH-point); --god-erosion: var(--g-WCH-erosion); --god-soft: var(--g-WCH-soft); --god-hair: var(--g-WCH-hair); --god-skin: var(--g-WCH-skin); }
-[data-god='ETN'] { --god-main: var(--g-ETN-main); --god-point: var(--g-ETN-point); --god-erosion: var(--g-ETN-erosion); --god-soft: var(--g-ETN-soft); --god-hair: var(--g-ETN-hair); --god-skin: var(--g-ETN-skin); }
-[data-god='DSR'] { --god-main: var(--g-DSR-main); --god-point: var(--g-DSR-point); --god-erosion: var(--g-DSR-erosion); --god-soft: var(--g-DSR-soft); --god-hair: var(--g-DSR-hair); --god-skin: var(--g-DSR-skin); }
-[data-god='VOI'] { --god-main: var(--g-VOI-main); --god-point: var(--g-VOI-point); --god-erosion: var(--g-VOI-erosion); --god-soft: var(--g-VOI-soft); --god-hair: var(--g-VOI-hair); --god-skin: var(--g-VOI-skin); }
+[data-god='NEU'] { --god-main: var(--g-NEU-main); --god-point: var(--g-NEU-point); --god-on-point: var(--g-NEU-on-point); --god-erosion: var(--g-NEU-erosion); --god-soft: var(--g-NEU-soft); }
+[data-god='PAT'] { --god-main: var(--g-PAT-main); --god-point: var(--g-PAT-point); --god-on-point: var(--g-PAT-on-point); --god-erosion: var(--g-PAT-erosion); --god-soft: var(--g-PAT-soft); --god-hair: var(--g-PAT-hair); --god-skin: var(--g-PAT-skin); }
+[data-god='WCH'] { --god-main: var(--g-WCH-main); --god-point: var(--g-WCH-point); --god-on-point: var(--g-WCH-on-point); --god-erosion: var(--g-WCH-erosion); --god-soft: var(--g-WCH-soft); --god-hair: var(--g-WCH-hair); --god-skin: var(--g-WCH-skin); }
+[data-god='ETN'] { --god-main: var(--g-ETN-main); --god-point: var(--g-ETN-point); --god-on-point: var(--g-ETN-on-point); --god-erosion: var(--g-ETN-erosion); --god-soft: var(--g-ETN-soft); --god-hair: var(--g-ETN-hair); --god-skin: var(--g-ETN-skin); }
+[data-god='DSR'] { --god-main: var(--g-DSR-main); --god-point: var(--g-DSR-point); --god-on-point: var(--g-DSR-on-point); --god-erosion: var(--g-DSR-erosion); --god-soft: var(--g-DSR-soft); --god-hair: var(--g-DSR-hair); --god-skin: var(--g-DSR-skin); }
+[data-god='VOI'] { --god-main: var(--g-VOI-main); --god-point: var(--g-VOI-point); --god-on-point: var(--g-VOI-on-point); --god-erosion: var(--g-VOI-erosion); --god-soft: var(--g-VOI-soft); --god-hair: var(--g-VOI-hair); --god-skin: var(--g-VOI-skin); }
 
 /* 강림 단계 = 낙차의 시계 (아트 §1-2): 단계가 오를수록 채도가 빠지고 신의 색이 화면을 물들인다 */
 [data-stage='0'] { --atmo: 0.10; --atmo-sat: 1; }

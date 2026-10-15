@@ -72,6 +72,14 @@ export function useEventFx(s: GameState) {
           case 'summon':
             place(`z${e.seat}`, q(`[data-zone-seat="${e.seat}"][data-zone="day"]`), `👻×${e.amount}`, 'summon');
             break;
+          case 'revive':
+            place(`z${e.seat}`, q(`[data-zone-seat="${e.seat}"][data-zone="day"]`), '↺ 되살림', 'summon');
+            break;
+          case 'bond': {
+            const r = (e.uid !== undefined ? document.querySelector(`[data-uid="${e.uid}"]`)?.getBoundingClientRect() : null) ?? q(`[data-panel-seat="${e.seat}"]`);
+            place(`b${e.seat}`, r, e.text.startsWith('💔') ? '💔' : '💗', 'death');
+            break;
+          }
           case 'power': {
             const el = document.querySelector(`[data-panel-seat="${e.seat}"]`);
             if (el) {

@@ -41,7 +41,7 @@
 .elog__item--ascend,
 .elog__item--win {
   background: var(--god-point);
-  color: #fff;
+  color: var(--god-on-point);
   font-weight: 800;
 }
 .elog__item--phase,

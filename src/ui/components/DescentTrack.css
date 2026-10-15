@@ -31,7 +31,7 @@
 .track__stage.is-done {
   background: var(--god-point);
   border-color: var(--god-point);
-  color: #fff;
+  color: var(--god-on-point);
 }
 .track__stage.is-current {
   border-color: var(--god-point);
@@ -77,7 +77,7 @@
   padding: 0 6px;
   border-radius: var(--r-pill);
   background: var(--god-point);
-  color: #fff;
+  color: var(--god-on-point);
   font-weight: 800;
   font-size: 11px;
   animation: pulse-soft 1.2s ease-in-out infinite;
