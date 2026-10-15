@@ -1,0 +1,80 @@
+.race {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border-radius: var(--r-lg);
+  background: var(--bg-raised);
+  border: 1.5px solid var(--line);
+}
+.race__title {
+  font-size: 15px;
+  color: var(--ink-dim);
+}
+.race__goal {
+  order: -1;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--accent);
+}
+.race__lanes {
+  display: flex;
+  gap: var(--sp-5);
+}
+.race__lane {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.race__tube {
+  position: relative;
+  width: 30px;
+  height: 180px;
+  border-radius: var(--r-pill);
+  background: var(--bg-sunken);
+  border: 1.5px solid var(--line-strong);
+  overflow: visible;
+}
+.race__fill {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  max-height: calc(100% - 6px);
+  border-radius: var(--r-pill);
+  background: var(--god-point);
+  transition: height var(--dur-slow) var(--ease-out);
+  min-height: 6px;
+}
+.race__runner {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+}
+.race__mark {
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  height: 2px;
+  background: var(--line-strong);
+  z-index: 1;
+}
+.race__pct {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.race__who {
+  font-size: 11px;
+  color: var(--ink-dim);
+}
+
+@media (max-width: 1100px) {
+  .race__tube {
+    height: 110px;
+  }
+}

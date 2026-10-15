@@ -1,0 +1,202 @@
+.godpanel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border-radius: var(--r-lg);
+  background: var(--bg-raised);
+  border: 1.5px solid var(--line);
+  /* 단계가 오를수록 신의 색이 패널을 물들인다 */
+  background-image: linear-gradient(160deg, color-mix(in srgb, var(--god-point) calc(var(--atmo) * 100%), transparent), transparent 70%);
+  transition: border-color var(--dur-mid), box-shadow var(--dur-mid);
+}
+.godpanel.is-active {
+  border-color: var(--god-point);
+  box-shadow: 0 0 0 1px var(--god-point), 0 0 24px -6px var(--god-point);
+}
+.godpanel.is-flash {
+  animation: panel-flash 700ms ease;
+}
+.godpanel__head {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: center;
+}
+.godpanel__portrait {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--god-soft);
+  box-shadow: inset 0 0 0 3px var(--god-point);
+  font-size: 26px;
+}
+.godpanel__who {
+  min-width: 0;
+}
+.godpanel__label {
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.godpanel__turn {
+  margin-left: 4px;
+  padding: 0 6px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.godpanel__char {
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1.1;
+}
+.godpanel__char small {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+.godpanel__god {
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+.godpanel__god em {
+  font-family: var(--font-flavor);
+  color: var(--ink-faint);
+}
+
+.godpanel__faith {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: 12px;
+}
+.godpanel__faith-label {
+  color: var(--ink-dim);
+}
+.godpanel__pips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  flex: 1;
+}
+.pip {
+  width: 12px;
+  height: 16px;
+  border-radius: 6px 6px 3px 3px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--line-strong);
+}
+.pip.is-on {
+  background: var(--faith);
+  border-color: var(--faith);
+  box-shadow: 0 -3px 8px -2px var(--faith);
+}
+.pip.is-bonus {
+  border-style: dashed;
+}
+.godpanel__faith-num {
+  font-weight: 800;
+  color: var(--faith);
+  font-variant-numeric: tabular-nums;
+}
+
+.power {
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+}
+.power.is-armed {
+  border-color: var(--target);
+  box-shadow: var(--shadow-glow);
+}
+.power__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+.power__name {
+  font-weight: 800;
+  color: var(--god-point);
+  filter: brightness(1.35);
+}
+.power__text {
+  margin: 6px 0 0;
+  font-size: 12px;
+}
+.power__next {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+.power__btn {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.godpanel__shrines {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.shrine-slot {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 8px;
+  border-radius: var(--r-sm);
+  background: var(--god-soft);
+  color: var(--paper-ink);
+  box-shadow: inset 3px 0 0 var(--god-point);
+  min-height: 52px;
+  animation: deal-in var(--dur-slow) var(--ease-bounce);
+}
+.shrine-slot.is-empty {
+  background: transparent;
+  border: 1px dashed var(--line-strong);
+  color: var(--ink-faint);
+  box-shadow: none;
+  font-size: 11px;
+  justify-content: center;
+  align-items: center;
+  animation: none;
+}
+.shrine-slot__kind {
+  font-size: 9px;
+  color: var(--paper-ink-dim);
+}
+.shrine-slot__name {
+  font-weight: 800;
+  font-size: 12px;
+}
+.shrine-slot__text {
+  font-size: 10px;
+  line-height: 1.25;
+  color: var(--paper-ink-dim);
+}
+
+.godpanel__counts {
+  display: flex;
+  gap: var(--sp-3);
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+
+@keyframes panel-flash {
+  0% {
+    box-shadow: 0 0 0 0 var(--god-point);
+  }
+  30% {
+    box-shadow: 0 0 0 4px var(--god-point), 0 0 40px 6px var(--god-point);
+  }
+  100% {
+    box-shadow: 0 0 0 1px var(--god-point);
+  }
+}

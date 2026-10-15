@@ -1,0 +1,144 @@
+/* ════════════════════════════════════════════════════════════════
+   《월간 MY GOD》 디자인 토큰 — UI 재디자인은 이 파일부터.
+   색·글꼴·간격·모서리·그림자·모션을 전부 변수로 둔다.
+   컴포넌트 CSS 는 원시값 대신 이 변수만 참조한다.
+   신별 색은 아트 기획서 §2-1 키 색상표(정본)에서 가져왔다.
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── 글꼴 ── */
+  --font-display: 'Black Han Sans', 'IBM Plex Sans KR', system-ui, sans-serif; /* 잡지 마스트헤드 */
+  --font-body: 'IBM Plex Sans KR', system-ui, -apple-system, sans-serif;
+  --font-flavor: 'Gowun Batang', 'Nanum Myeongjo', serif; /* 플레이버 — 무거운 속 */
+
+  /* ── 바탕: 밤의 탁자 ── */
+  --bg: #17141d;
+  --bg-raised: #221d2a;
+  --bg-sunken: #0f0d13;
+  --bg-overlay: rgba(12, 10, 16, 0.78);
+  --line: #362f40;
+  --line-strong: #4d4459;
+
+  /* ── 글자 ── */
+  --ink: #f2ece3;
+  --ink-dim: #b2a8bb;
+  --ink-faint: #756c80;
+
+  /* ── 카드 지면 (플랫·라인리스) ── */
+  --paper: #f4ede1;
+  --paper-shade: #e6dccb;
+  --paper-ink: #2b2530;
+  --paper-ink-dim: #6f6573;
+
+  /* ── 의미 색 ── */
+  --accent: #f0c552; /* 촛불 — 주 강조 */
+  --accent-ink: #2b2112;
+  --op: #f0c552; /* OP (봉헌 포인트) */
+  --faith: #ffd98a; /* 신앙심 */
+  --life: #e8645a; /* 목숨값 */
+  --offering: #f0c552; /* 봉헌력 */
+  --raid: #c7d0dc; /* 습격력 */
+  --danger: #e8645a;
+  --good: #7fd1a8;
+  --target: #7fe0ff; /* 대상 지정 하이라이트 */
+
+  /* ── 구역 ── */
+  --zone-day: #2a2433; /* 일상 (표층) */
+  --zone-day-line: #3d3449;
+  --zone-sanct: #2b1c27; /* 성역 (제단) */
+  --zone-sanct-line: #5a2f45;
+
+  /* ── 중립 (병맛 제물) ── */
+  --g-NEU-main: #e2a93b;
+  --g-NEU-point: #ffcf5c;
+  --g-NEU-erosion: #8a6420;
+  --g-NEU-soft: #f6e3b4;
+
+  /* ── 인내의 신 · 한영일 (PAT) — 형광등 청백 + 탁한 회청 ── */
+  --g-PAT-main: #9aa6ad;
+  --g-PAT-point: #3f6fa0;
+  --g-PAT-erosion: #b8d4dc;
+  --g-PAT-soft: #dde6ea;
+  --g-PAT-hair: #7a7e86;
+  --g-PAT-skin: #e6d2c4;
+
+  /* ── 마녀 다인시아 · 서다인 (WCH) — 보라 + 백발 ── */
+  --g-WCH-main: #211c28;
+  --g-WCH-point: #a45ce0;
+  --g-WCH-erosion: #5a2f8a;
+  --g-WCH-soft: #e7dcf4;
+  --g-WCH-hair: #ece7f4;
+  --g-WCH-skin: #f0dccf;
+
+  /* ── 영원의 신 · 백지우 (ETN) — 아이보리·우드 ── */
+  --g-ETN-main: #e6dcc4;
+  --g-ETN-point: #e8d98f;
+  --g-ETN-erosion: #8a6f4a;
+  --g-ETN-soft: #f1ead8;
+  --g-ETN-hair: #d8c7a0;
+  --g-ETN-skin: #ecdccb;
+
+  /* ── 욕망의 신 · 이하니 (DSR) — 핑크 ── */
+  --g-DSR-main: #ff9ec4;
+  --g-DSR-point: #ff5fa0;
+  --g-DSR-erosion: #d95f9e;
+  --g-DSR-soft: #ffe0ec;
+  --g-DSR-hair: #d98cae;
+  --g-DSR-skin: #f4dccf;
+
+  /* ── 무위의 신 · 김민수 (VOI) — 탈색 녹회 ── */
+  --g-VOI-main: #8a9182;
+  --g-VOI-point: #aeb8ae;
+  --g-VOI-erosion: #666e60;
+  --g-VOI-soft: #d9ddd4;
+  --g-VOI-hair: #5a6058;
+  --g-VOI-skin: #cdd2c4;
+
+  /* ── 간격 (4px 그리드) ── */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+
+  /* ── 모서리 ── */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  --r-pill: 999px;
+
+  /* ── 그림자 (플랫 — 한 겹만) ── */
+  --shadow-card: 0 6px 0 -2px rgba(0, 0, 0, 0.35);
+  --shadow-lift: 0 14px 24px -8px rgba(0, 0, 0, 0.55);
+  --shadow-glow: 0 0 0 2px var(--target), 0 0 18px 2px rgba(127, 224, 255, 0.45);
+
+  /* ── 크기 ── */
+  --card-w: 132px; /* 손패 카드 */
+  --card-h: 188px;
+  --unit-w: 104px; /* 보드 신도 */
+  --unit-h: 120px;
+  --sidebar-w: 280px;
+
+  /* ── 모션 ── */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 140ms;
+  --dur-mid: 260ms;
+  --dur-slow: 600ms;
+}
+
+/* 신 테마 바인딩 — data-god 를 단 요소 아래에선 --god-* 로 그 신의 색을 쓴다 */
+[data-god='NEU'] { --god-main: var(--g-NEU-main); --god-point: var(--g-NEU-point); --god-erosion: var(--g-NEU-erosion); --god-soft: var(--g-NEU-soft); }
+[data-god='PAT'] { --god-main: var(--g-PAT-main); --god-point: var(--g-PAT-point); --god-erosion: var(--g-PAT-erosion); --god-soft: var(--g-PAT-soft); --god-hair: var(--g-PAT-hair); --god-skin: var(--g-PAT-skin); }
+[data-god='WCH'] { --god-main: var(--g-WCH-main); --god-point: var(--g-WCH-point); --god-erosion: var(--g-WCH-erosion); --god-soft: var(--g-WCH-soft); --god-hair: var(--g-WCH-hair); --god-skin: var(--g-WCH-skin); }
+[data-god='ETN'] { --god-main: var(--g-ETN-main); --god-point: var(--g-ETN-point); --god-erosion: var(--g-ETN-erosion); --god-soft: var(--g-ETN-soft); --god-hair: var(--g-ETN-hair); --god-skin: var(--g-ETN-skin); }
+[data-god='DSR'] { --god-main: var(--g-DSR-main); --god-point: var(--g-DSR-point); --god-erosion: var(--g-DSR-erosion); --god-soft: var(--g-DSR-soft); --god-hair: var(--g-DSR-hair); --god-skin: var(--g-DSR-skin); }
+[data-god='VOI'] { --god-main: var(--g-VOI-main); --god-point: var(--g-VOI-point); --god-erosion: var(--g-VOI-erosion); --god-soft: var(--g-VOI-soft); --god-hair: var(--g-VOI-hair); --god-skin: var(--g-VOI-skin); }
+
+/* 강림 단계 = 낙차의 시계 (아트 §1-2): 단계가 오를수록 채도가 빠지고 신의 색이 화면을 물들인다 */
+[data-stage='0'] { --atmo: 0.10; --atmo-sat: 1; }
+[data-stage='1'] { --atmo: 0.22; --atmo-sat: 0.85; }
+[data-stage='2'] { --atmo: 0.40; --atmo-sat: 0.65; }
+[data-stage='3'] { --atmo: 0.60; --atmo-sat: 0.5; }

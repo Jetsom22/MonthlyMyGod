@@ -1,0 +1,89 @@
+.track {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.track__stages {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.track__stage {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 3px 6px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  color: var(--ink-faint);
+  font-size: 11px;
+}
+.track__stage-name {
+  font-weight: 700;
+}
+.track__stage-th {
+  font-size: 10px;
+  opacity: 0.8;
+}
+.track__stage.is-done {
+  background: var(--god-point);
+  border-color: var(--god-point);
+  color: #fff;
+}
+.track__stage.is-current {
+  border-color: var(--god-point);
+  color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--god-point);
+}
+.track__bar {
+  display: grid;
+  gap: 2px;
+  height: 14px;
+}
+.track__tick {
+  border-radius: 3px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+  transition: background var(--dur-mid);
+}
+.track__tick.is-on {
+  background: var(--op);
+  border-color: var(--op);
+}
+.track__tick.is-incoming {
+  border-color: var(--op);
+  background: repeating-linear-gradient(-45deg, transparent 0 3px, rgba(240, 197, 82, 0.55) 3px 5px);
+}
+.track__read {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 12px;
+  color: var(--ink-dim);
+  flex-wrap: wrap;
+}
+.track__op b {
+  color: var(--op);
+  font-size: 16px;
+}
+.track__pending {
+  color: var(--op);
+  font-weight: 700;
+}
+.track__ascend {
+  padding: 0 6px;
+  border-radius: var(--r-pill);
+  background: var(--god-point);
+  color: #fff;
+  font-weight: 800;
+  font-size: 11px;
+  animation: pulse-soft 1.2s ease-in-out infinite;
+}
+@keyframes pulse-soft {
+  50% {
+    opacity: 0.55;
+  }
+}

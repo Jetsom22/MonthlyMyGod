@@ -1,0 +1,138 @@
+.fx {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+.fx__item {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-weight: 900;
+  font-size: 18px;
+  white-space: nowrap;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 0, 0, 0.6);
+  animation: fx-float 1.25s var(--ease-out) forwards;
+}
+.fx__item--op {
+  color: var(--op);
+  font-size: 20px;
+}
+.fx__item--loss {
+  color: var(--danger);
+}
+.fx__item--dmg {
+  color: var(--danger);
+  font-size: 24px;
+}
+.fx__item--death {
+  font-size: 40px;
+  animation-name: fx-puff;
+}
+.fx__item--summon {
+  color: var(--g-PAT-erosion);
+}
+.fx__item--faith {
+  color: var(--faith);
+}
+@keyframes fx-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -30%) scale(0.7);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -60%) scale(1.15);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -190%) scale(1);
+  }
+}
+@keyframes fx-puff {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.3);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -110%) scale(1.8);
+  }
+}
+
+/* 턴·단계 배너 */
+.banner {
+  position: fixed;
+  left: 50%;
+  top: 42%;
+  z-index: 60;
+  transform: translate(-50%, -50%);
+  padding: 10px 28px;
+  border-radius: var(--r-lg);
+  background: var(--bg-overlay);
+  border: 2px solid var(--god-point);
+  text-align: center;
+  pointer-events: none;
+  animation: banner-in 900ms var(--ease-out) forwards;
+}
+.banner__title {
+  font-size: 26px;
+  color: var(--ink);
+}
+.banner__sub {
+  font-size: 13px;
+  color: var(--ink-dim);
+}
+.banner--big {
+  padding: 28px 80px;
+  width: min(92vw, 720px);
+  border-width: 0;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--god-point) 75%, black) 15%, color-mix(in srgb, var(--god-point) 75%, black) 85%, transparent);
+  animation: banner-big 1.7s var(--ease-out) forwards;
+}
+.banner--big .banner__title {
+  font-size: 64px;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 30px var(--god-point);
+}
+.banner--big .banner__sub {
+  color: #fff;
+  font-size: 15px;
+  margin-top: 6px;
+}
+@keyframes banner-in {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -30%);
+  }
+  20%,
+  75% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+}
+@keyframes banner-big {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleX(0.3);
+    letter-spacing: 0.6em;
+  }
+  18%,
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scaleX(1);
+    letter-spacing: 0.02em;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}

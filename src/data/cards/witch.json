@@ -1,0 +1,145 @@
+[
+  {
+    "id": "WCH-U-001", "name": "견습 마녀", "type": "U", "deck": "WCH", "cost": 1,
+    "life": 2, "offering": 1, "raid": 1, "role": "저가",
+    "text": "",
+    "flavor": "주문서는 유튜브 자막으로 외웠다."
+  },
+  {
+    "id": "WCH-U-002", "name": "종이 사역마", "type": "U", "deck": "WCH", "cost": 2,
+    "life": 1, "offering": 2, "raid": 1, "role": "고봉헌 제물",
+    "text": "",
+    "flavor": "접어서 만든 새. 바람만 불어도 찢어진다."
+  },
+  {
+    "id": "WCH-U-003", "name": "중2병 계약자", "type": "U", "deck": "WCH", "cost": 2,
+    "life": 2, "offering": 1, "raid": 2, "role": "어그로",
+    "text": "사망 시: OP +1.",
+    "flavor": "봉인된 오른팔이 욱신거린다. 사실 깁스다.",
+    "effects": [{ "when": { "trigger": "on_death" }, "what": "op_gain", "who": "self_owner", "params": { "amount": 1 } }]
+  },
+  {
+    "id": "WCH-U-004", "name": "흑염룡을 품은 자", "type": "U", "deck": "WCH", "cost": 3,
+    "life": 2, "offering": 1, "raid": 3, "role": "습격수",
+    "text": "",
+    "flavor": "흑염룡이 날뛴다…! (속쓰림)"
+  },
+  {
+    "id": "WCH-U-005", "name": "순교자", "type": "U", "deck": "WCH", "cost": 3,
+    "life": 3, "offering": 2, "raid": 0, "role": "벽",
+    "text": "사망 시: OP +2.",
+    "flavor": "때려도 좋아요. 그게 곧 봉헌이니까.",
+    "effects": [{ "when": { "trigger": "on_death" }, "what": "op_gain", "who": "self_owner", "params": { "amount": 2 } }]
+  },
+  {
+    "id": "WCH-U-006", "name": "부적 인형", "type": "U", "deck": "WCH", "cost": 1,
+    "life": 1, "offering": 1, "raid": 0, "role": "저가 제물",
+    "text": "",
+    "flavor": "다이소 천 원. 효험은 별매."
+  },
+  {
+    "id": "WCH-U-007", "name": "마력 폭주 소녀", "type": "U", "deck": "WCH", "cost": 4,
+    "life": 2, "offering": 2, "raid": 3, "role": "피니셔",
+    "text": "",
+    "flavor": "멈추는 법은 아직 안 배웠어."
+  },
+  {
+    "id": "WCH-U-008", "name": "계약의 흑묘", "type": "U", "deck": "WCH", "cost": 2,
+    "life": 2, "offering": 1, "raid": 2, "role": "사역마 어그로",
+    "text": "",
+    "flavor": "계약서엔 츄르 평생 지급이라 적혀 있다."
+  },
+  {
+    "id": "WCH-U-009", "name": "스스로를 태운 아이", "type": "U", "deck": "WCH", "cost": 3,
+    "life": 2, "offering": 2, "raid": 1, "role": "각성",
+    "text": "",
+    "awaken": { "from": 1, "text": "권능으로 희생되면 OP 두 배." },
+    "flavor": "뜨겁다. 그래도 지금이 제일 특별해.",
+    "effects": [{ "when": { "trigger": "on_sacrificed_by_power" }, "what": "op_gain", "who": "self_owner", "params": { "amount": "sac_offering" }, "from": 1 }]
+  },
+  {
+    "id": "WCH-U-010", "name": "다인시아의 그림자", "type": "U", "deck": "WCH", "cost": 4,
+    "life": 3, "offering": 2, "raid": 2, "role": "각성",
+    "text": "",
+    "awaken": { "from": 2, "text": "내가 희생할 때마다 상대 성역 신도에 1 피해." },
+    "flavor": "그림자만은 진짜 마녀처럼 웃었다.",
+    "effects": [{ "when": { "trigger": "my_sacrifice" }, "what": "damage_unit", "who": "enemy_sanct_weakest", "params": { "amount": 1 }, "from": 2 }]
+  },
+  {
+    "id": "WCH-U-011", "name": "마지막 제물", "type": "U", "deck": "WCH", "cost": 4,
+    "life": 1, "offering": 2, "raid": 0, "role": "피니셔",
+    "text": "사망 시: OP +2.",
+    "flavor": "이번엔 진짜 되는 각이야.",
+    "effects": [{ "when": { "trigger": "on_death" }, "what": "op_gain", "who": "self_owner", "params": { "amount": 2 } }]
+  },
+  {
+    "id": "WCH-U-012", "name": "허세의 신도", "type": "U", "deck": "WCH", "cost": 2,
+    "life": 2, "offering": 1, "raid": 1, "role": "만능",
+    "text": "",
+    "flavor": "다인시아님은 진짜야. 진짜라니까?"
+  },
+  {
+    "id": "WCH-R-001", "name": "흑마술 의식", "type": "R", "deck": "WCH", "cost": 2, "subtag": "희생",
+    "text": "내 신도 하나 즉시 희생 → 봉헌력만큼 OP + 카드 1장.",
+    "flavor": "볼펜으로 그린 마법진이, 처음으로 빛났다.",
+    "target": { "side": "ally" },
+    "effects": [
+      { "when": "active", "what": "sacrifice", "who": "chosen" },
+      { "when": "active", "what": "op_gain", "who": "self_owner", "params": { "amount": "sac_offering" } },
+      { "when": "active", "what": "draw", "who": "self_owner", "params": { "count": 1 } }
+    ]
+  },
+  {
+    "id": "WCH-R-002", "name": "피의 계약", "type": "R", "deck": "WCH", "cost": 1, "subtag": "습격",
+    "text": "내 신도 하나 이번 턴 습격력 +2.",
+    "flavor": "손가락 끝을 살짝. 생각보다 많이 났다.",
+    "target": { "side": "ally" },
+    "effects": [{ "when": "active", "what": "raid_buff", "who": "chosen", "params": { "amount": 2, "duration": "turn" } }]
+  },
+  {
+    "id": "WCH-R-003", "name": "제물 소환진", "type": "R", "deck": "WCH", "cost": 2, "subtag": "배치",
+    "text": "손패의 신도 하나를 비용 없이 성역에 즉시 배치.",
+    "flavor": "줄 서지 마세요. 바로 제단으로 모십니다.",
+    "target": { "side": "hand", "type": "U" },
+    "effects": [{ "when": "active", "what": "rush_sanctuary", "who": "chosen" }]
+  },
+  {
+    "id": "WCH-R-004", "name": "마력 방출", "type": "R", "deck": "WCH", "cost": 2, "subtag": "희생",
+    "text": "내 신도 희생 → 봉헌력만큼 OP + 상대 성역 신도에 그만큼 피해.",
+    "flavor": "터뜨린다. 나도 같이 조금씩.",
+    "target": { "side": "ally" },
+    "effects": [
+      { "when": "active", "what": "sacrifice", "who": "chosen" },
+      { "when": "active", "what": "op_gain", "who": "self_owner", "params": { "amount": "sac_offering" } },
+      { "when": "active", "what": "damage_unit", "who": "enemy_sanct_weakest", "params": { "amount": "sac_offering" } }
+    ]
+  },
+  {
+    "id": "WCH-R-005", "name": "흑염룡 각성", "type": "R", "deck": "WCH", "cost": 1, "subtag": "습격",
+    "text": "내 신도 하나 이번 턴 습격력 +3, 턴 끝에 소멸(희생).",
+    "flavor": "오늘만큼은 진짜 흑염룡이다.",
+    "target": { "side": "ally" },
+    "effects": [
+      { "when": "active", "what": "raid_buff", "who": "chosen", "params": { "amount": 3, "duration": "turn" } },
+      { "when": "active", "what": "doom", "who": "chosen" }
+    ]
+  },
+  {
+    "id": "WCH-S-001", "name": "마법진", "type": "S", "deck": "WCH", "cost": 2, "shrine_slot": "sanct",
+    "text": "내 성역 신도가 죽을 때 OP +1.",
+    "flavor": "분필 자국 위로 진짜 피가 번진다.",
+    "effects": [{ "when": { "trigger": "ally_death" }, "what": "op_gain", "who": "self_owner", "params": { "amount": 1 }, "cond": { "zone": "sanct" } }]
+  },
+  {
+    "id": "WCH-S-002", "name": "피의 제단", "type": "S", "deck": "WCH", "cost": 2, "shrine_slot": "sanct",
+    "text": "권능으로 희생할 때 OP +1.",
+    "flavor": "제단은 배가 고프다. 늘.",
+    "effects": [{ "when": { "trigger": "power_sacrifice" }, "what": "op_gain", "who": "self_owner", "params": { "amount": 1 } }]
+  },
+  {
+    "id": "WCH-S-003", "name": "다인시아의 탑", "type": "S", "deck": "WCH", "cost": 4, "shrine_slot": "special",
+    "text": "내 신도 봉헌력 +1.",
+    "flavor": "자기 이름을 붙인 탑. 계단은 위로만 나 있다.",
+    "effects": [{ "when": "passive", "what": "offering_buff", "who": "my_units", "params": { "amount": 1 } }]
+  }
+]

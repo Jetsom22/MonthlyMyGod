@@ -1,0 +1,172 @@
+[
+  {
+    "id": "PAT-T-001", "name": "유령", "type": "T", "deck": "PAT", "cost": 0,
+    "life": 1, "offering": 1, "raid": 0, "ghost": true,
+    "text": "처형당해도 OP 손실 없음. 부활 없음.",
+    "flavor": "아직 끝낼 일이 남았잖아."
+  },
+  {
+    "id": "PAT-U-001", "name": "수습 사원", "type": "U", "deck": "PAT", "cost": 1,
+    "life": 2, "offering": 1, "raid": 1, "role": "저가 일꾼",
+    "text": "",
+    "flavor": "첫 출근 날, 퇴근 시간은 아무도 알려주지 않았다."
+  },
+  {
+    "id": "PAT-U-002", "name": "만년 대리", "type": "U", "deck": "PAT", "cost": 2,
+    "life": 2, "offering": 1, "raid": 1, "role": "고유·일꾼",
+    "text": "사망 시: 유령 하나 소환.",
+    "flavor": "올해도 진급은 없었다.",
+    "effects": [{ "when": { "trigger": "on_death" }, "what": "summon_token", "who": "self_owner", "params": { "token": "PAT-T-001", "count": 1 } }]
+  },
+  {
+    "id": "PAT-U-003", "name": "성실한 계약직", "type": "U", "deck": "PAT", "cost": 3,
+    "life": 2, "offering": 2, "raid": 1, "role": "주력 일꾼",
+    "text": "",
+    "flavor": "정규직 전환 심사는 내년이래요. 작년에도 그랬지만."
+  },
+  {
+    "id": "PAT-U-004", "name": "총무부 김씨", "type": "U", "deck": "PAT", "cost": 3,
+    "life": 3, "offering": 1, "raid": 2, "role": "만능",
+    "text": "",
+    "flavor": "복사기도, 사람도, 고장 나면 김씨를 부른다."
+  },
+  {
+    "id": "PAT-U-005", "name": "순직한 부장", "type": "U", "deck": "PAT", "cost": 4,
+    "life": 4, "offering": 0, "raid": 2, "role": "고유·벽",
+    "text": "사망 시: 유령 둘 소환.",
+    "flavor": "결재 서류를 쥔 채로 발견되었다.",
+    "effects": [{ "when": { "trigger": "on_death" }, "what": "summon_token", "who": "self_owner", "params": { "token": "PAT-T-001", "count": 2 } }]
+  },
+  {
+    "id": "PAT-U-006", "name": "경비 반장", "type": "U", "deck": "PAT", "cost": 3,
+    "life": 4, "offering": 0, "raid": 1, "role": "벽",
+    "text": "",
+    "flavor": "새벽 세 시, 불 켜진 층은 언제나 같은 층."
+  },
+  {
+    "id": "PAT-U-007", "name": "독한 영업사원", "type": "U", "deck": "PAT", "cost": 3,
+    "life": 2, "offering": 0, "raid": 3, "role": "습격수",
+    "text": "",
+    "flavor": "실적은 사람을 갈아서 나온다. 주로 남을."
+  },
+  {
+    "id": "PAT-U-008", "name": "과로사한 창업주", "type": "U", "deck": "PAT", "cost": 5,
+    "life": 3, "offering": 2, "raid": 1, "role": "고유·피니셔",
+    "text": "사망 시: 유령 셋 소환.",
+    "flavor": "회사는 내 자식이었다. 자식은 아빠 얼굴을 몰랐다.",
+    "effects": [{ "when": { "trigger": "on_death" }, "what": "summon_token", "who": "self_owner", "params": { "token": "PAT-T-001", "count": 3 } }]
+  },
+  {
+    "id": "PAT-U-009", "name": "퇴직을 앞둔 부장", "type": "U", "deck": "PAT", "cost": 3,
+    "life": 3, "offering": 1, "raid": 1, "role": "각성",
+    "text": "",
+    "awaken": { "from": 1, "text": "죽으면 유령 둘 소환." },
+    "flavor": "정년까지 석 달. 그 석 달이 끝나질 않는다.",
+    "effects": [{ "when": { "trigger": "on_death" }, "what": "summon_token", "who": "self_owner", "params": { "token": "PAT-T-001", "count": 2 }, "from": 1 }]
+  },
+  {
+    "id": "PAT-U-010", "name": "잊혀진 창립 멤버", "type": "U", "deck": "PAT", "cost": 4,
+    "life": 3, "offering": 2, "raid": 1, "role": "각성",
+    "text": "",
+    "awaken": { "from": 2, "text": "매 턴 시작, 유령 하나가 자동 노동 (유령이 있으면 OP +1)." },
+    "flavor": "사진 속 창립 기념식, 가장자리에 반쯤 잘린 얼굴.",
+    "effects": [{ "when": { "trigger": "turn_start" }, "what": "op_gain", "who": "self_owner", "params": { "amount": 1 }, "cond": { "min_ghosts": 1 }, "from": 2 }]
+  },
+  {
+    "id": "PAT-U-011", "name": "사축의 표본", "type": "U", "deck": "PAT", "cost": 2,
+    "life": 2, "offering": 1, "raid": 1, "role": "각성",
+    "text": "",
+    "awaken": { "from": 1, "text": "죽으면 유령 소환." },
+    "flavor": "회사가 나를 버려도, 나는 회사를 못 버린다.",
+    "effects": [{ "when": { "trigger": "on_death" }, "what": "summon_token", "who": "self_owner", "params": { "token": "PAT-T-001", "count": 1 }, "from": 1 }]
+  },
+  {
+    "id": "PAT-U-012", "name": "셔터 내리는 야간경비", "type": "U", "deck": "PAT", "cost": 4,
+    "life": 5, "offering": 0, "raid": 1, "role": "벽",
+    "text": "",
+    "flavor": "셔터를 내려도, 안에서 일하는 소리는 그치지 않는다."
+  },
+  {
+    "id": "PAT-R-001", "name": "명예퇴직", "type": "R", "deck": "PAT", "cost": 2, "subtag": "생성",
+    "text": "내 신도 하나 소멸 (사망 트리거 발동).",
+    "flavor": "명예는 퇴직금에 포함되지 않습니다.",
+    "target": { "side": "ally", "ghost": false },
+    "effects": [{ "when": "active", "what": "sacrifice", "who": "chosen" }]
+  },
+  {
+    "id": "PAT-R-002", "name": "특별 성과급", "type": "R", "deck": "PAT", "cost": 1, "subtag": "강화",
+    "text": "이번 턴 내 유령 전부 봉헌력 +1.",
+    "flavor": "지급 대상: 재직 중인 자. 유령도 재직 중이다.",
+    "effects": [{ "when": "active", "what": "offering_buff", "who": "my_ghosts", "params": { "amount": 1, "duration": "turn" } }]
+  },
+  {
+    "id": "PAT-R-003", "name": "비상 소집", "type": "R", "deck": "PAT", "cost": 2, "subtag": "활용",
+    "text": "내 유령 하나 즉시 한 번 더 행동 (그 봉헌력만큼 OP).",
+    "flavor": "주말 단톡방에 '확인 부탁드립니다'가 올라왔다.",
+    "target": { "side": "ally", "ghost": true },
+    "effects": [{ "when": "active", "what": "instant_offering", "who": "chosen" }]
+  },
+  {
+    "id": "PAT-R-004", "name": "사규 개정", "type": "R", "deck": "PAT", "cost": 2, "subtag": "생성",
+    "text": "내 신도 하나에 「사망 시: 유령 소환」 부여.",
+    "flavor": "제17조 2항: 퇴사는 사망으로 갈음할 수 없다.",
+    "target": { "side": "ally", "ghost": false },
+    "effects": [{ "when": "active", "what": "grant_keyword", "who": "chosen", "params": { "keyword": "on_death:summon_token", "token": "PAT-T-001", "count": 1 } }]
+  },
+  {
+    "id": "PAT-R-005", "name": "회식 강요", "type": "R", "deck": "PAT", "cost": 1, "subtag": "활용",
+    "text": "이번 턴 내 성역 신도/유령 하나 습격력 +2.",
+    "flavor": "빠지는 사람 없죠? 다 같이 가는 거예요.",
+    "target": { "side": "ally", "zone": "sanct" },
+    "effects": [{ "when": "active", "what": "raid_buff", "who": "chosen", "params": { "amount": 2, "duration": "turn" } }]
+  },
+  {
+    "id": "PAT-R-006", "name": "구조조정", "type": "R", "deck": "PAT", "cost": 3, "subtag": "생성",
+    "text": "내 신도 하나 소멸 + 유령 둘 소환.",
+    "flavor": "자리는 줄었고, 일은 그대로다.",
+    "target": { "side": "ally", "ghost": false },
+    "effects": [
+      { "when": "active", "what": "sacrifice", "who": "chosen" },
+      { "when": "active", "what": "summon_token", "who": "self_owner", "params": { "token": "PAT-T-001", "count": 2 } }
+    ]
+  },
+  {
+    "id": "PAT-R-007", "name": "전사자 예우", "type": "R", "deck": "PAT", "cost": 3, "subtag": "페이오프",
+    "text": "내 유령 수만큼 OP.",
+    "flavor": "사내 게시판에 근조 화환 사진이 올라왔다. 좋아요 3.",
+    "effects": [{ "when": "active", "what": "op_gain", "who": "self_owner", "params": { "amount": "ghost_count" } }]
+  },
+  {
+    "id": "PAT-R-008", "name": "야근 소집", "type": "R", "deck": "PAT", "cost": 2, "subtag": "생성",
+    "text": "유령 둘 소환.",
+    "flavor": "오늘도 다들 남아 있네. ...어제 퇴사한 사람까지.",
+    "effects": [{ "when": "active", "what": "summon_token", "who": "self_owner", "params": { "token": "PAT-T-001", "count": 2 } }]
+  },
+  {
+    "id": "PAT-S-001", "name": "24시 사옥", "type": "S", "deck": "PAT", "cost": 3, "shrine_slot": "day",
+    "text": "일상의 내 유령 봉헌력 +1.",
+    "flavor": "불이 꺼진 적이 없는 건물.",
+    "effects": [{ "when": "passive", "what": "offering_buff", "who": "my_day_ghosts", "params": { "amount": 1 } }]
+  },
+  {
+    "id": "PAT-S-002", "name": "사내 추모비", "type": "S", "deck": "PAT", "cost": 2, "shrine_slot": "sanct",
+    "text": "내 유령 소멸 시 OP +1.",
+    "flavor": "새겨진 이름은 매년 늘어난다. 근속 연수처럼.",
+    "effects": [{ "when": { "trigger": "ally_death" }, "what": "op_gain", "who": "self_owner", "params": { "amount": 1 }, "cond": { "ghost": true } }]
+  },
+  {
+    "id": "PAT-S-003", "name": "노동조합", "type": "S", "deck": "PAT", "cost": 4, "shrine_slot": "special",
+    "text": "내 유령 습격력 +1, 목숨값 +1.",
+    "flavor": "죽은 자들도 단결한다.",
+    "effects": [
+      { "when": "passive", "what": "raid_buff", "who": "my_ghosts", "params": { "amount": 1 } },
+      { "when": "passive", "what": "life_buff", "who": "my_ghosts", "params": { "amount": 1 } }
+    ]
+  },
+  {
+    "id": "PAT-S-005", "name": "증축 사옥", "type": "S", "deck": "PAT", "cost": 3, "shrine_slot": "day",
+    "text": "내 일상 슬롯 +2.",
+    "flavor": "책상은 늘었다. 사람은 안 늘었다.",
+    "effects": [{ "when": "passive", "what": "slot_buff", "who": "self_owner", "params": { "zone": "day", "amount": 2 } }]
+  }
+]

@@ -1,0 +1,201 @@
+.unit {
+  position: relative;
+  width: var(--unit-w);
+  flex: none;
+  animation: deal-in var(--dur-slow) var(--ease-bounce);
+}
+.unit__body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: var(--unit-h);
+  padding: 0;
+  border: none;
+  border-radius: var(--r-md);
+  background: var(--paper);
+  color: var(--paper-ink);
+  overflow: hidden;
+  box-shadow: var(--shadow-card), inset 0 0 0 2px var(--god-point);
+  transition: transform var(--dur-mid) var(--ease-out), box-shadow var(--dur-mid), filter var(--dur-mid), opacity var(--dur-mid);
+  text-align: left;
+}
+.unit.is-clickable .unit__body {
+  cursor: pointer;
+}
+.unit.is-clickable .unit__body:hover {
+  transform: translateY(-4px);
+}
+.unit__body:disabled {
+  cursor: default;
+}
+.unit__name {
+  padding: 4px 6px 3px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--god-point);
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.03em;
+}
+.unit__art {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.unit__badges {
+  position: absolute;
+  left: 3px;
+  bottom: 3px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-start;
+}
+.unit__badge {
+  padding: 0 4px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 14px;
+  background: var(--paper-ink);
+  color: var(--paper);
+}
+.unit__badge--new {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.unit__badge--awake {
+  background: var(--god-point);
+  color: #fff;
+}
+.unit__badge--doom {
+  background: var(--danger);
+  color: #fff;
+}
+.unit__death {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  min-height: 15px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--paper-ink-dim);
+  background: var(--paper-shade);
+}
+.unit__stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 3px 2px 4px;
+  font-size: 13px;
+  background: var(--paper-ink);
+}
+.unit__stats small {
+  font-size: 9px;
+  opacity: 0.7;
+}
+.stat.is-buffed {
+  text-decoration: underline wavy;
+  text-underline-offset: 3px;
+}
+.unit__wound {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(transparent, rgba(232, 100, 90, 0.28));
+  pointer-events: none;
+}
+
+/* 유령 — 반투명 청백 */
+.unit--ghost .unit__body {
+  background: #eaf3f6;
+  box-shadow: var(--shadow-card), inset 0 0 0 2px var(--g-PAT-erosion);
+  opacity: 0.92;
+}
+.unit--ghost .unit__name {
+  background: var(--g-PAT-erosion);
+  color: var(--paper-ink);
+}
+
+/* 상태 */
+.unit.is-targetable .unit__body {
+  animation: pulse-target 1.1s ease-in-out infinite;
+}
+.unit.is-selected .unit__body {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lift), 0 0 0 3px var(--accent);
+}
+.unit.is-ready .unit__body {
+  box-shadow: var(--shadow-card), 0 0 0 2px var(--danger), inset 0 0 0 2px var(--god-point);
+}
+.unit.is-ready .unit__name::before {
+  content: '⚔ ';
+}
+.unit.is-spent .unit__body {
+  filter: saturate(0.4) brightness(0.85);
+}
+.unit.is-dimmed .unit__body {
+  opacity: 0.45;
+}
+.unit.is-hit .unit__body {
+  animation: hit-shake 420ms ease;
+}
+
+.unit__move {
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  transform: translateX(-50%);
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  border: 1.5px solid var(--line-strong);
+  background: var(--bg-raised);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--dur-fast);
+  z-index: 3;
+}
+.unit:hover .unit__move,
+.unit__move:focus-visible {
+  opacity: 1;
+}
+@media (hover: none) {
+  .unit__move {
+    opacity: 1;
+  }
+}
+
+@keyframes deal-in {
+  from {
+    transform: translateY(18px) scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes hit-shake {
+  0%,
+  100% {
+    transform: none;
+  }
+  20% {
+    transform: translateX(-5px) rotate(-2deg);
+  }
+  40% {
+    transform: translateX(5px) rotate(2deg);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}

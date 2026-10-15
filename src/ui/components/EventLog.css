@@ -1,0 +1,61 @@
+.elog {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  border-radius: var(--r-lg);
+  background: var(--bg-raised);
+  border: 1.5px solid var(--line);
+  overflow: hidden;
+}
+.elog__title {
+  padding: var(--sp-2) var(--sp-3);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-dim);
+  border-bottom: 1px solid var(--line);
+}
+.elog__list {
+  margin: 0;
+  padding: var(--sp-2);
+  list-style: none;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 120px;
+}
+.elog__item {
+  display: flex;
+  gap: 6px;
+  padding: 3px 6px;
+  margin-bottom: 2px;
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  border-left: 3px solid var(--god-point);
+  animation: log-in var(--dur-mid) var(--ease-out);
+}
+.elog__item--turn {
+  margin-top: 8px;
+  background: var(--bg-sunken);
+  font-weight: 700;
+}
+.elog__item--ascend,
+.elog__item--win {
+  background: var(--god-point);
+  color: #fff;
+  font-weight: 800;
+}
+.elog__item--phase,
+.elog__item--info {
+  color: var(--ink-dim);
+}
+.elog__icon {
+  flex: none;
+  width: 16px;
+  text-align: center;
+}
+@keyframes log-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+}

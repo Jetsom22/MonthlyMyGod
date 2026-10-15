@@ -1,0 +1,66 @@
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: var(--sp-4);
+  background: var(--bg-overlay);
+  animation: fade-in var(--dur-mid) ease;
+}
+.modal__card {
+  width: min(720px, 100%);
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-lg);
+  background: var(--bg-raised);
+  border: 1.5px solid var(--line-strong);
+  overflow: hidden;
+}
+.modal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--line);
+}
+.modal__head h2 {
+  margin: 0;
+  font-size: 22px;
+}
+.modal__body {
+  padding: var(--sp-4);
+  overflow-y: auto;
+  display: grid;
+  gap: var(--sp-3);
+}
+.modal__body h3 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  color: var(--accent);
+}
+.modal__body p,
+.modal__body ul,
+.modal__body ol {
+  margin: 0;
+  color: var(--ink-dim);
+  font-size: 13px;
+}
+.modal__body ul,
+.modal__body ol {
+  padding-left: 18px;
+}
+.modal__body b {
+  color: var(--ink);
+}
+.modal__note {
+  padding: var(--sp-3);
+  border-radius: var(--r-md);
+  border: 1px dashed var(--line-strong);
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}

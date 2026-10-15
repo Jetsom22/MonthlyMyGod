@@ -1,0 +1,107 @@
+.gallery {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: var(--sp-4);
+}
+.gallery__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  padding-bottom: var(--sp-3);
+  border-bottom: 2px solid var(--ink);
+}
+.gallery__head h1 {
+  margin: 0;
+  font-size: 34px;
+}
+.gallery__tabs {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+.gallery__stage {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+.gallery__stage select {
+  padding: 4px 8px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line-strong);
+  background: var(--bg-raised);
+  color: var(--ink);
+  font: inherit;
+}
+
+.gods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--sp-3);
+  margin: var(--sp-4) 0;
+}
+.god-sheet {
+  padding: var(--sp-4);
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--god-point) 16%, var(--bg-raised));
+  border: 1.5px solid var(--god-point);
+}
+.god-sheet__title {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: center;
+}
+.god-sheet__title .display {
+  font-size: 24px;
+}
+.god-sheet__title small {
+  color: var(--ink-dim);
+}
+.god-sheet__glyph {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--god-soft);
+  font-size: 24px;
+}
+.god-sheet__power {
+  margin: var(--sp-3) 0 var(--sp-2);
+  font-weight: 800;
+}
+.god-sheet__stages {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+}
+.god-sheet__stages li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--sp-5) var(--sp-3);
+  justify-items: center;
+}
+.gallery__item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+.gallery__meta {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--ink-faint);
+}

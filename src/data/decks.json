@@ -1,0 +1,24 @@
+{
+  "PAT": {
+    "name": "야근 기본 덱",
+    "cards": [
+      "PAT-U-001", "PAT-U-001", "PAT-U-002", "PAT-U-002", "PAT-U-003", "PAT-U-003",
+      "PAT-U-004", "PAT-U-005", "PAT-U-006", "PAT-U-007", "PAT-U-008",
+      "PAT-U-009", "PAT-U-009", "PAT-U-010", "PAT-U-011", "PAT-U-011", "PAT-U-012",
+      "PAT-R-008", "PAT-R-008", "PAT-R-006", "PAT-R-007", "PAT-R-007", "PAT-R-004", "PAT-R-002",
+      "PAT-S-005", "PAT-S-001", "PAT-S-002",
+      "NEU-R-002", "NEU-R-001", "NEU-R-003"
+    ]
+  },
+  "WCH": {
+    "name": "마녀 기본 덱",
+    "cards": [
+      "WCH-U-001", "WCH-U-001", "WCH-U-002", "WCH-U-002", "WCH-U-003", "WCH-U-003",
+      "WCH-U-004", "WCH-U-005", "WCH-U-005", "WCH-U-006", "WCH-U-006", "WCH-U-007",
+      "WCH-U-008", "WCH-U-009", "WCH-U-009", "WCH-U-010", "WCH-U-011", "WCH-U-012",
+      "WCH-R-001", "WCH-R-001", "WCH-R-002", "WCH-R-003", "WCH-R-004", "WCH-R-005",
+      "WCH-S-001", "WCH-S-002", "WCH-S-003",
+      "NEU-R-002", "NEU-R-003", "NEU-R-005"
+    ]
+  }
+}
