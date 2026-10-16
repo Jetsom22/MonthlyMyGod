@@ -6,6 +6,7 @@ import {
   allUnits,
   applyAction,
   currentPowerStage,
+  daySlots,
   deathSummary,
   dependentUnit,
   effOffering,
@@ -28,7 +29,7 @@ import {
 import { BALANCE } from './db';
 import type { GameAction, GameState, PlayerState, Seat, Unit } from './types';
 
-const W = {
+export const W = {
   op: 1.0, // OP 1 (정규화 후)
   stage: 2.5, // 단계 상승 자체 가치 (그릇·권능)
   dayOffering: 1.5,
@@ -37,7 +38,7 @@ const W = {
   dayLife: 0.12,
   sanctRaid: 0.45,
   sanctLife: 0.2,
-  witchSacPotential: 0.4,
+  witchSacPotential: 0.9, // 마녀: 성역 신도 = 태울 제물
   deathGhost: 0.7,
   deathOp: 0.9,
   ghostManifest: 1.4, // 인내 현현: 유령 1 = 매 턴 OP 1
@@ -51,6 +52,7 @@ const W = {
   leech: 1.2, // 욕망: 의존 대상이 봉헌할 때 흡착되는 OP
   shrine: 1.4, // 성지 — 판에 남는 상시 이득
   idleDaySlot: 0.8, // 봉헌 0인 신도가 일상 자리를 막고 있음
+  slotPressure: 0.7, // 일상이 꽉 차서 손패 신도가 못 나오는 손해 (장당)
 };
 
 function unitValue(s: GameState, u: Unit, p: PlayerState): number {
@@ -87,6 +89,10 @@ function sideScore(s: GameState, p: PlayerState): number {
   for (const u of allUnits(p)) v += unitValue(s, u, p);
   v += Math.min(p.hand.length, 7) * W.hand;
   v += p.shrines.length * W.shrine;
+  // 일상이 꽉 찼는데 손에 신도가 밀려 있다 → 자리를 돌려 써야 한다 (성역으로 보내기·희생·헌납)
+  if (p.day.length >= daySlots(p)) {
+    v -= Math.min(2, p.hand.filter((id) => card(id).type === 'U').length) * W.slotPressure;
+  }
   // 《아무것도 안 하기》로 스스로 묶였는데 낼 수 있는 카드가 남았다면 그만큼 손해
   if (p.locked && s.active === p.seat && s.phase === 'prep') {
     v -= p.hand.filter((id) => effectiveCost(s, p.seat, id) <= p.faith).length * 0.9;
